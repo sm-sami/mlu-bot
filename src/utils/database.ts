@@ -3,7 +3,7 @@ import { loadConfig } from "../config";
 
 let db: Db;
 
-const { dbUri, dbName } = loadConfig()
+const { dbUri, dbName } = loadConfig();
 
 async function initializeClient(): Promise<Db> {
   const client = await MongoClient.connect(dbUri);
