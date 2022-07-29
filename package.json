@@ -1,0 +1,20 @@
+{
+  "name": "mlu-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node build/index.js",
+    "build": "yarn run tsc",
+    "dev": "yarn tsc-watch --onSuccess \"yarn start\""
+  },
+  "dependencies": {
+    "discord.js": "^14.0.3",
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.2",
+    "dotenv": "^16.0.1",
+    "tsc-watch": "^5.0.3"
+  }
+}
