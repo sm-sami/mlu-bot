@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } from "discord.js";
-import { getUserStats } from "../controllers/user-controllers";
+import { createUserStatsEmbed } from "../utils";
 
 export = {
   data: new SlashCommandBuilder()
@@ -14,7 +14,9 @@ export = {
 
     try {
       if (user) {
-        if (typeof interaction.channel ) await getUserStats(user, interaction.channel);
+        const playerStats = await createUserStatsEmbed(user);
+
+        playerStats && await interaction.reply({embeds: [playerStats]});
       }
     } catch (e) {
       console.log(e);

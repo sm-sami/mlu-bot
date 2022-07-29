@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits, ChatInputCommandInteraction } from "discord.js";
-import { getUserStats, updateUserPoints } from "../controllers/user-controllers";
+import { updateUserPoints } from "../controllers/user-controllers";
 
 export = {
   data: new SlashCommandBuilder()
@@ -24,7 +24,6 @@ export = {
         const isUpdated = await updateUserPoints(user, points);
 
         await interaction.reply(isUpdated ?`Awarded **${points}** points to ${user}` : "Error: Failed to update the points");
-        if (typeof interaction.channel ) await getUserStats(user, interaction.channel);
       }
     } catch (e) {
       console.log(e);

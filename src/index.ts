@@ -15,7 +15,7 @@ bot.on('interactionCreate', async (interaction: Interaction) => {
 })
 
 bot.login(token)
-  .then(() => bot.user!.setActivity('/help'))
+  .then(() => bot.user!.setActivity('/stats'))
   .then(() => deployCommands()
     .then(() => console.log("✅ Commands registered successfully"))
     .catch(() => console.error))
