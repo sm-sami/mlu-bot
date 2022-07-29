@@ -3,7 +3,7 @@ import {
   PermissionFlagsBits,
   ChatInputCommandInteraction,
 } from "discord.js";
-import { createUserStatsEmbed } from "../utils";
+import { createUserStatsEmbed } from "../helpers";
 
 export = {
   data: new SlashCommandBuilder()

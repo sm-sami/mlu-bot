@@ -1,5 +1,5 @@
 import { EmbedBuilder, User } from "discord.js";
-import { database } from "./index";
+import { database } from "../utils";
 
 export const createUserStatsEmbed = async (user: User) => {
   try {
