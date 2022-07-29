@@ -9,6 +9,7 @@
     "dev": "yarn tsc-watch --onSuccess \"yarn start\""
   },
   "dependencies": {
+    "@discordjs/rest": "^1.0.1",
     "discord.js": "^14.0.3",
     "typescript": "^4.7.4"
   },
