@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
-import { loadConfig } from "./config";
+import { loadConfig } from "../config";
 
 const { clientId, guildId, token } = loadConfig();
 
@@ -11,6 +11,8 @@ const commands = [
 
 const rest = new REST({ version: '10' }).setToken(token);
 
-export const deployCommands = () => {
+const deployCommands = () => {
   return rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
 }
+
+export default deployCommands;
