@@ -1,5 +1,5 @@
 import { User } from "discord.js";
-import { getUsersDatabase } from "../utils";
+import { getUsersDatabase } from "../utils/database";
 
 export const updateUserPoints = async (user: User, points: number) => {
   try {

@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits, Interaction } from "discord.js";
 
-import { deployCommands, initializeClient } from "./utils";
+import { deployCommands } from "./utils/deploy-commands";
+import { initializeClient } from "./utils/database";
 import { handleInputCommandInteraction } from "./handlers";
 import { token } from "./utils/constants";
 

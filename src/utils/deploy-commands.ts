@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+
 import { Routes } from "discord.js";
 import { REST } from "@discordjs/rest";
+
 import { clientId, guildId, token } from "./constants";
 
 export const commands: Array<JSON> = [];
@@ -17,7 +19,7 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: "10" }).setToken(token);
 
-const deployCommands = async () => {
+export const deployCommands = async () => {
   try {
     await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
       body: commands,
@@ -27,5 +29,3 @@ const deployCommands = async () => {
     throw e;
   }
 };
-
-export default deployCommands;

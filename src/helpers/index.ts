@@ -1,3 +1,4 @@
+import { updateUserPoints } from "./user";
 import { createUserStatsEmbed, createLeaderboardEmbed } from "./create-embed";
 
-export { createUserStatsEmbed, createLeaderboardEmbed };
+export { updateUserPoints, createUserStatsEmbed, createLeaderboardEmbed };
