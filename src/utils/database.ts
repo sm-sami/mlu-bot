@@ -6,8 +6,13 @@ let db: Db;
 const { dbUri, dbName } = loadConfig();
 
 async function initializeClient(): Promise<Db> {
-  const client = await MongoClient.connect(dbUri);
-  return client.db(dbName);
+  try {
+    const client = await MongoClient.connect(dbUri);
+    console.log(`✔️Connected to Database`);
+    return client.db(dbName);
+  } catch (e) {
+    throw e;
+  }
 }
 
 const database = async (): Promise<Db> => {

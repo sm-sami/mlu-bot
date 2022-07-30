@@ -18,7 +18,9 @@ export const createUserStatsEmbed = async (user: User) => {
           iconURL:
             "https://cdn.discordapp.com/attachments/871801727974785055/937070492366561352/outline_place_white_24dp.png",
         })
-        .setDescription(`Guess the Place stats for ${userMention(userData.userId)}`)
+        .setDescription(
+          `Guess the Place stats for ${userMention(userData.userId)}`
+        )
         .addFields(
           { name: "Total Points", value: `${userData.points}`, inline: true },
           {

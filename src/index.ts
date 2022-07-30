@@ -6,7 +6,7 @@ import { loadConfig } from "./config";
 const { token } = loadConfig();
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-bot.once("ready", () => console.log("Bot Online!"));
+bot.once("ready", () => console.log("✔️Bot Ready!"));
 
 bot.on("interactionCreate", async (interaction: Interaction) => {
   if (!interaction.isChatInputCommand()) return;
@@ -17,9 +17,5 @@ bot.on("interactionCreate", async (interaction: Interaction) => {
 bot
   .login(token)
   .then(() => bot.user!.setActivity("/stats"))
-  .then(() =>
-    deployCommands()
-      .then(() => console.log("✅ Commands registered successfully"))
-      .catch(() => console.error)
-  )
+  .then(() => deployCommands())
   .catch(() => console.error);

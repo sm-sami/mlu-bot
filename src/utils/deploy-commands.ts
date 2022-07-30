@@ -18,10 +18,15 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: "10" }).setToken(token);
 
-const deployCommands = () => {
-  return rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-    body: commands,
-  });
+const deployCommands = async () => {
+  try {
+    await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+      body: commands,
+    });
+    console.log(`✔️Registered All Commands!`);
+  } catch (e) {
+    throw e;
+  }
 };
 
 export default deployCommands;
