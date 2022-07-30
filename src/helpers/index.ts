@@ -1,3 +1,3 @@
-import { createUserStatsEmbed } from "./user-stats-embed";
+import { createUserStatsEmbed, createLeaderboardEmbed } from "./create-embed";
 
-export { createUserStatsEmbed };
+export { createUserStatsEmbed, createLeaderboardEmbed };

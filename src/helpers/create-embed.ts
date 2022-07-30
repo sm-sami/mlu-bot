@@ -1,4 +1,4 @@
-import { EmbedBuilder, User } from "discord.js";
+import { EmbedBuilder, User, userMention } from "discord.js";
 import { database } from "../utils";
 
 export const createUserStatsEmbed = async (user: User) => {
@@ -18,7 +18,7 @@ export const createUserStatsEmbed = async (user: User) => {
           iconURL:
             "https://cdn.discordapp.com/attachments/871801727974785055/937070492366561352/outline_place_white_24dp.png",
         })
-        .setDescription(`Guess the Place stats for <@${userData!.userId}>`)
+        .setDescription(`Guess the Place stats for ${userMention(userData.userId)}`)
         .addFields(
           { name: "Total Points", value: `${userData.points}`, inline: true },
           {
@@ -49,6 +49,55 @@ export const createUserStatsEmbed = async (user: User) => {
         .setTimestamp()
         .setFooter({ text: "Map Lovers United" });
     }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const createLeaderboardEmbed = async () => {
+  try {
+    const db = await database();
+
+    const topTenUsers = await db
+      .collection("users")
+      .find({}, { projection: { _id: 0, user: 0 } })
+      .sort({ points: -1, numberOfWins: 1 })
+      .limit(10)
+      .toArray();
+
+    const fields = [
+      {
+        name: "User",
+        value: `${topTenUsers
+          .map((user, index) => `${userMention(user.userId)}`)
+          .join("\n")}`,
+        inline: true,
+      },
+      {
+        name: "Wins",
+        value: `${topTenUsers
+          .map((user) => `${user.numberOfWins}`)
+          .join("\n")}`,
+        inline: true,
+      },
+      {
+        name: "Points",
+        value: `${topTenUsers.map((user) => `${user.points}`).join("\n")}`,
+        inline: true,
+      },
+    ];
+
+    return new EmbedBuilder()
+      .setColor(0x000000)
+      .setTitle("Leaderboard")
+      .setAuthor({
+        name: "Guess the Place",
+        iconURL:
+          "https://cdn.discordapp.com/attachments/871801727974785055/937070492366561352/outline_place_white_24dp.png",
+      })
+      .addFields(...fields)
+      .setTimestamp()
+      .setFooter({ text: "Map Lovers United" });
   } catch (e) {
     console.error(e);
   }
