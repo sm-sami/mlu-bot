@@ -5,7 +5,7 @@ import { updateUserPoints } from "../helpers";
 
 export = {
   data: new SlashCommandBuilder()
-    .setName("give")
+    .setName("set")
     .setDescription("Give points to a user")
     .addUserOption((option) =>
       option
