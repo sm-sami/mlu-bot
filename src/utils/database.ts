@@ -1,25 +1,25 @@
 import { Db, MongoClient } from "mongodb";
 import { loadConfig } from "../config";
 
+let dbClient: MongoClient;
 let db: Db;
 
 const { dbUri, dbName } = loadConfig();
 
-async function initializeClient(): Promise<Db> {
+export const initializeClient = async (): Promise<MongoClient> => {
   try {
-    const client = await MongoClient.connect(dbUri);
+    const dbClient = await MongoClient.connect(dbUri);
     console.log(`✔️Connected to Database`);
-    return client.db(dbName);
+    return dbClient;
   } catch (e) {
     throw e;
   }
-}
+};
 
-const database = async (): Promise<Db> => {
+export const getUsersDatabase = async (): Promise<Db> => {
   if (!db) {
-    db = await initializeClient();
+    if (!dbClient) dbClient = await initializeClient();
+    db = dbClient.db(dbName);
   }
   return db;
 };
-
-export default database;

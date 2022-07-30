@@ -1,9 +1,9 @@
 import { User } from "discord.js";
-import { database } from "../utils";
+import { getUsersDatabase } from "../utils";
 
 export const updateUserPoints = async (user: User, points: number) => {
   try {
-    const db = await database();
+    const db = await getUsersDatabase();
 
     const { modifiedCount, upsertedCount } = await db
       .collection("users")

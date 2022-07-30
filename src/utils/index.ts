@@ -1,4 +1,4 @@
 import deployCommands from "./deploy-commands";
-import database from "./database";
+import { initializeClient, getUsersDatabase } from "./database";
 
-export { deployCommands, database };
+export { deployCommands, initializeClient, getUsersDatabase };

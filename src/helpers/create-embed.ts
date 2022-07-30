@@ -1,9 +1,9 @@
 import { EmbedBuilder, User, userMention } from "discord.js";
-import { database } from "../utils";
+import { getUsersDatabase } from "../utils";
 
 export const createUserStatsEmbed = async (user: User) => {
   try {
-    const db = await database();
+    const db = await getUsersDatabase();
 
     const userData = await db.collection("users").findOne({ userId: user.id });
     if (userData) {
@@ -58,7 +58,7 @@ export const createUserStatsEmbed = async (user: User) => {
 
 export const createLeaderboardEmbed = async () => {
   try {
-    const db = await database();
+    const db = await getUsersDatabase();
 
     const topTenUsers = await db
       .collection("users")
