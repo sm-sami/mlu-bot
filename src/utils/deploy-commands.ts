@@ -2,11 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { Routes } from "discord.js";
 import { REST } from "@discordjs/rest";
-import { loadConfig } from "../config";
+import { clientId, guildId, token } from "./constants";
 
-const { clientId, guildId, token } = loadConfig();
+export const commands: Array<JSON> = [];
 
-export const commands: any = [];
 const commandsPath = path.join(__dirname, "../commands");
 const commandFiles = fs.readdirSync(commandsPath);
 

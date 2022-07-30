@@ -1,9 +1,9 @@
 import { Client, GatewayIntentBits, Interaction } from "discord.js";
-import { deployCommands, initializeClient } from "./utils";
-import { handleInputCommandInteraction } from "./interactions";
-import { loadConfig } from "./config";
 
-const { token } = loadConfig();
+import { deployCommands, initializeClient } from "./utils";
+import { handleInputCommandInteraction } from "./handlers";
+import { token } from "./utils/constants";
+
 const bot = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 bot.once("ready", () => console.log("✔️Bot Ready!"));

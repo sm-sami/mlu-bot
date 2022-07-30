@@ -1,4 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
+import type { ChatInputCommandInteraction } from "discord.js";
+
 import { createLeaderboardEmbed } from "../helpers";
 
 export = {
@@ -6,7 +8,7 @@ export = {
     .setName("leaderboard")
     .setDescription("Get the leaderboard"),
 
-  async execute(interaction: ChatInputCommandInteraction) {
+  async handle(interaction: ChatInputCommandInteraction) {
     const leaderboardStats = await createLeaderboardEmbed();
     leaderboardStats &&
       (await interaction.reply({ embeds: [leaderboardStats] }));

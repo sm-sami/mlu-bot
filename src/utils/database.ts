@@ -1,10 +1,8 @@
 import { Db, MongoClient } from "mongodb";
-import { loadConfig } from "../config";
+import { dbUri, dbName } from "./constants";
 
 let dbClient: MongoClient;
 let db: Db;
-
-const { dbUri, dbName } = loadConfig();
 
 export const initializeClient = async (): Promise<MongoClient> => {
   try {

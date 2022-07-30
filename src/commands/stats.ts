@@ -1,8 +1,6 @@
-import {
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-  ChatInputCommandInteraction,
-} from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
+import type { ChatInputCommandInteraction } from "discord.js";
+
 import { createUserStatsEmbed } from "../helpers";
 
 export = {
@@ -15,7 +13,7 @@ export = {
         .setDescription("User for whom the stats is to be shown.")
     ),
 
-  async execute(interaction: ChatInputCommandInteraction) {
+  async handle(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser("user") || interaction.user;
 
     try {

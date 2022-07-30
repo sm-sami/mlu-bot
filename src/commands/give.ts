@@ -1,9 +1,7 @@
-import {
-  SlashCommandBuilder,
-  PermissionFlagsBits,
-  ChatInputCommandInteraction,
-} from "discord.js";
-import { updateUserPoints } from "../controllers/user-controllers";
+import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
+import type { ChatInputCommandInteraction } from "discord.js";
+
+import { updateUserPoints } from "../helpers/user";
 
 export = {
   data: new SlashCommandBuilder()
@@ -23,7 +21,7 @@ export = {
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
 
-  async execute(interaction: ChatInputCommandInteraction) {
+  async handle(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser("user");
     const points = interaction.options.getNumber("points");
 
