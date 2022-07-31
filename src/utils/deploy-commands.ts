@@ -19,10 +19,12 @@ const rest = new REST({ version: "10" }).setToken(token);
 
 export const deployCommands = async () => {
   try {
-    await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
-      body: commands,
-    });
-    console.log(`✔️Registered All Commands!`);
+    await rest
+      .put(Routes.applicationGuildCommands(clientId, guildId), {
+        body: commands,
+      })
+      .then(() => console.log("✔️Registered All Commands!"))
+      .catch(console.error);
   } catch (e) {
     throw e;
   }
