@@ -1,4 +1,10 @@
-import { updateUserPoints } from "./user";
-import { createUserStatsEmbed, createLeaderboardEmbed } from "./create-embed";
+import { updateUserPoints, getUserData, getTopTenUsers } from "./user";
+import { createNewGame, getGameData } from "./game";
 
-export { updateUserPoints, createUserStatsEmbed, createLeaderboardEmbed };
+export {
+  updateUserPoints,
+  getUserData,
+  getTopTenUsers,
+  createNewGame,
+  getGameData,
+};
