@@ -1,6 +1,8 @@
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
-
+import {
+  SlashCommandBuilder,
+  ChatInputCommandInteraction,
+  PermissionFlagsBits,
+} from "discord.js";
 import { updateUserPoints } from "../helpers";
 
 export = {

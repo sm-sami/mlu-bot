@@ -14,7 +14,7 @@ export const initializeClient = async (): Promise<MongoClient> => {
   }
 };
 
-export const getUsersDatabase = async (): Promise<Db> => {
+export const getDatabase = async (): Promise<Db> => {
   if (!db) {
     if (!dbClient) dbClient = await initializeClient();
     db = dbClient.db(dbName);

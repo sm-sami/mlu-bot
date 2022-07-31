@@ -1,7 +1,5 @@
-import { SlashCommandBuilder } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
-
-import { createLeaderboardEmbed } from "../helpers";
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { createLeaderboardEmbed } from "../utils/create";
 
 export = {
   data: new SlashCommandBuilder()
