@@ -1,3 +1,1 @@
-import { handleInputCommandInteraction } from "./interaction-handlers";
-
-export { handleInputCommandInteraction };
+export * from "./interaction-handlers";
