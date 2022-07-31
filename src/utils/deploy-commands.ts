@@ -1,9 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-
 import { Routes } from "discord.js";
 import { REST } from "@discordjs/rest";
-
 import { clientId, guildId, token } from "./constants";
 
 export const commands: Array<JSON> = [];

@@ -1,12 +1,12 @@
-import { setTimeout } from "node:timers/promises";
+import { setTimeout as wait } from "node:timers/promises";
 import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createGameEmbed, createConfirmButton } from "../utils/create";
 import { createNewGame } from "../helpers";
+import { createGameEmbed, createConfirmButton } from "../utils/create";
 
 export = {
   data: new SlashCommandBuilder()
@@ -52,7 +52,7 @@ export = {
             ephemeral: true,
             components: [confirmButtonRow],
           });
-          await setTimeout(60 * 10 * 1000);
+          await wait(1000 * 60 * 10);
           const confirmButtonDisabledRow = await createConfirmButton(true);
           await interaction.editReply({
             components: [confirmButtonDisabledRow],

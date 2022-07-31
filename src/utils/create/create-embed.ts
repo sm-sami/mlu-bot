@@ -1,7 +1,6 @@
-import { EmbedBuilder, User, time, userMention } from "discord.js";
+import { EmbedBuilder, User, userMention } from "discord.js";
+import { getTopTenUsers, getUserData, getGameData } from "../../helpers";
 import { iconURL, gameInstructions } from "../constants";
-import { getTopTenUsers, getUserData } from "../../helpers";
-import { getGameData } from "../../helpers";
 
 export const createUserStatsEmbed = async (user: User) => {
   try {
@@ -97,12 +96,26 @@ export const createLeaderboardEmbed = async () => {
   }
 };
 
-export const createGameEmbed = async (gameId: number) => {
+export const createGameEmbed = async (gameId?: string, revealHint?: 0 | 1) => {
   try {
     const gameData = await getGameData(gameId);
 
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
+    let hints = `hint #1: ${gameData!.hints[0].ts}\nhint #2: ${
+      gameData!.hints[1].ts
+    }`;
+
+    switch (revealHint) {
+      case 0:
+        hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
+          gameData!.hints[1].ts
+        }`;
+        break;
+      case 1:
+        hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
+          gameData!.hints[1].hint
+        }`;
+        break;
+    }
 
     return new EmbedBuilder()
       .setColor(0xffffff)
@@ -118,12 +131,12 @@ export const createGameEmbed = async (gameId: number) => {
         },
         {
           name: "Hints",
-          value: `hint #1: ${time(date, "R")}\nhint #2: ${gameData!.hints[1]}`,
+          value: hints,
         }
       )
       .setImage(gameData!.image)
       .setTimestamp()
-      .setFooter({ text: "Map Lovers United" });
+      .setFooter({ text: `MLU | ${gameData!.gameId}` });
   } catch (e) {
     console.error(e);
   }
