@@ -1,11 +1,11 @@
 import { EmbedBuilder, User, userMention } from "discord.js";
-import { getUsersDatabase } from "../utils/database";
+import { getTopTenUsers, getUserData, getGameData } from "../../helpers";
+import { iconURL, gameInstructions } from "../constants";
 
 export const createUserStatsEmbed = async (user: User) => {
   try {
-    const db = await getUsersDatabase();
+    const userData = await getUserData(user);
 
-    const userData = await db.collection("users").findOne({ userId: user.id });
     if (userData) {
       return new EmbedBuilder()
         .setColor(user.accentColor || 0x0099ff)
@@ -15,8 +15,7 @@ export const createUserStatsEmbed = async (user: User) => {
         )
         .setAuthor({
           name: "Guess the Place",
-          iconURL:
-            "https://cdn.discordapp.com/attachments/871801727974785055/937070492366561352/outline_place_white_24dp.png",
+          iconURL,
         })
         .setDescription(
           `Guess the Place stats for ${userMention(userData.userId)}`
@@ -58,20 +57,13 @@ export const createUserStatsEmbed = async (user: User) => {
 
 export const createLeaderboardEmbed = async () => {
   try {
-    const db = await getUsersDatabase();
-
-    const topTenUsers = await db
-      .collection("users")
-      .find({}, { projection: { _id: 0, user: 0 } })
-      .sort({ points: -1, numberOfWins: 1 })
-      .limit(10)
-      .toArray();
+    const topTenUsers = await getTopTenUsers();
 
     const fields = [
       {
         name: "User",
         value: `${topTenUsers
-          .map((user, index) => `${userMention(user.userId)}`)
+          .map((user) => `${userMention(user.userId)}`)
           .join("\n")}`,
         inline: true,
       },
@@ -94,12 +86,57 @@ export const createLeaderboardEmbed = async () => {
       .setTitle("Leaderboard")
       .setAuthor({
         name: "Guess the Place",
-        iconURL:
-          "https://cdn.discordapp.com/attachments/871801727974785055/937070492366561352/outline_place_white_24dp.png",
+        iconURL,
       })
       .addFields(...fields)
       .setTimestamp()
       .setFooter({ text: "Map Lovers United" });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const createGameEmbed = async (gameId?: string, revealHint?: 0 | 1) => {
+  try {
+    const gameData = await getGameData(gameId);
+
+    let hints = `hint #1: ${gameData!.hints[0].ts}\nhint #2: ${
+      gameData!.hints[1].ts
+    }`;
+
+    switch (revealHint) {
+      case 0:
+        hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
+          gameData!.hints[1].ts
+        }`;
+        break;
+      case 1:
+        hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
+          gameData!.hints[1].hint
+        }`;
+        break;
+    }
+
+    return new EmbedBuilder()
+      .setColor(0xffffff)
+      .setTitle(gameData!.title)
+      .setAuthor({
+        name: "Guess the Place",
+        iconURL,
+      })
+      .setFields(
+        {
+          name: "Instructions",
+          value: `${gameInstructions.map((i) => `• ${i}`).join("\n")}`,
+        },
+        {
+          name: "Hints",
+          value: hints,
+        }
+      )
+      .setImage(gameData!.image)
+      .setTimestamp()
+      .setFooter({ text: `MLU | ${gameData!.gameId}` });
   } catch (e) {
     console.error(e);
   }

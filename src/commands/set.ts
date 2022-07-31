@@ -1,11 +1,13 @@
-import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
-
+import {
+  SlashCommandBuilder,
+  ChatInputCommandInteraction,
+  PermissionFlagsBits,
+} from "discord.js";
 import { updateUserPoints } from "../helpers";
 
 export = {
   data: new SlashCommandBuilder()
-    .setName("give")
+    .setName("set")
     .setDescription("Give points to a user")
     .addUserOption((option) =>
       option

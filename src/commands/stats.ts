@@ -1,7 +1,5 @@
-import { SlashCommandBuilder } from "discord.js";
-import type { ChatInputCommandInteraction } from "discord.js";
-
-import { createUserStatsEmbed } from "../helpers";
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { createUserStatsEmbed } from "../utils/create";
 
 export = {
   data: new SlashCommandBuilder()
