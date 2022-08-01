@@ -1,6 +1,7 @@
 import { v4 as getId } from "uuid";
 import { getDatabase } from "../utils/database";
 import { mapHintsWithReleaseTimestamp } from "../utils";
+import { User } from "discord.js";
 
 export const createNewGame = async (
   image: string,
@@ -61,6 +62,32 @@ export const cleanUpGames = async () => {
     const db = await getDatabase();
 
     await db.collection("games").deleteMany({ isPosted: false });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const saveGameState = async (
+  userId: string,
+  gameId: string,
+  channelId: string
+) => {
+  try {
+    const db = await getDatabase();
+
+    await db.collection("game_state").insertOne({ userId, gameId, channelId });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const doesPlayerHaveChannel = async (userId: string, gameId: string) => {
+  try {
+    const db = await getDatabase();
+
+    return await db
+      .collection("game_state")
+      .findOne({ userId, gameId }, { projection: { _id: 0, channelId: 1 } });
   } catch (e) {
     console.log(e);
   }

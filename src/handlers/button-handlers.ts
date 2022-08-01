@@ -1,18 +1,35 @@
 import { setTimeout as wait } from "node:timers/promises";
-import { ButtonInteraction, roleMention } from "discord.js";
-import { cleanUpGames, setPosted } from "../helpers/game";
-import { createConfirmButton, createGameEmbed } from "../utils/create";
-import { chatGamesRole } from "../utils/constants";
+import {
+  ButtonInteraction,
+  PermissionsBitField,
+  channelMention,
+  roleMention,
+  ChannelType,
+} from "discord.js";
+import {
+  cleanUpGames,
+  saveGameState,
+  setPosted,
+  doesPlayerHaveChannel,
+} from "../helpers/game";
+import {
+  createConfirmButton,
+  createCreateChannelButton,
+  createGameEmbed,
+} from "../utils/create";
+import { chatGamesCategoryId, chatGamesRole } from "../utils/constants";
 import { getGameIdFromEmbed } from "../utils";
 
 export const handleConfirmButton = async (interaction: ButtonInteraction) => {
   await interaction.deferUpdate();
-  let gameEmbed = await createGameEmbed();
 
   if (interaction.channel) {
+    let gameEmbed = await createGameEmbed();
+    const createChannelButtonRow = await createCreateChannelButton();
     const message = await interaction.channel.send({
       content: `${roleMention(chatGamesRole)}`,
       embeds: [gameEmbed!],
+      components: [createChannelButtonRow],
     });
     const confirmButtonDisabledRow = await createConfirmButton(true);
     await interaction.editReply({ components: [confirmButtonDisabledRow] });
@@ -32,4 +49,45 @@ export const handleConfirmButton = async (interaction: ButtonInteraction) => {
       message.edit({ embeds: [gameEmbed!] });
     }
   }
+};
+
+export const handleCreateChannelButton = async (
+  interaction: ButtonInteraction
+) => {
+  const gameId = getGameIdFromEmbed(interaction.message);
+  const playerState = await doesPlayerHaveChannel(interaction.user.id, gameId);
+
+  if (interaction.guild) {
+    if (!playerState) {
+      const channel = await interaction.guild.channels.create({
+        name: `${interaction.user.username} guess`,
+        type: ChannelType.GuildText,
+        parent: chatGamesCategoryId,
+        permissionOverwrites: [
+          {
+            id: interaction.guild.roles.everyone,
+            deny: [PermissionsBitField.Flags.ViewChannel],
+          },
+          {
+            id: interaction.user.id,
+            allow: [PermissionsBitField.Flags.ViewChannel],
+          },
+        ],
+      });
+      await saveGameState(interaction.user.id, gameId, channel.id);
+      await interaction.reply({
+        content: `Make a guess in ${channelMention(channel.id)} :smile:`,
+        ephemeral: true,
+      });
+      return;
+    }
+    await interaction.reply({
+      content: `You already have a channel to guess ${channelMention(
+        playerState.channelId
+      )} :sloth:`,
+      ephemeral: true,
+    });
+    return;
+  }
+  await interaction.reply("Something went wrong :pensive:");
 };

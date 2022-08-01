@@ -3,11 +3,15 @@ import {
   createLeaderboardEmbed,
   createGameEmbed,
 } from "./create-embed";
-import { createConfirmButton } from "./create-button";
+import {
+  createConfirmButton,
+  createCreateChannelButton,
+} from "./create-button";
 
 export {
   createUserStatsEmbed,
   createLeaderboardEmbed,
   createGameEmbed,
   createConfirmButton,
+  createCreateChannelButton,
 };
