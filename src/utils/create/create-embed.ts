@@ -100,43 +100,46 @@ export const createGameEmbed = async (gameId?: string, revealHint?: 0 | 1) => {
   try {
     const gameData = await getGameData(gameId);
 
-    let hints = `hint #1: ${gameData!.hints[0].ts}\nhint #2: ${
-      gameData!.hints[1].ts
-    }`;
+    if (gameData) {
+      let hints = `hint #1: ${gameData.hints[0].ts}\nhint #2: ${
+        gameData!.hints[1].ts
+      }`;
 
-    switch (revealHint) {
-      case 0:
-        hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
-          gameData!.hints[1].ts
-        }`;
-        break;
-      case 1:
-        hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
-          gameData!.hints[1].hint
-        }`;
-        break;
+      switch (revealHint) {
+        case 0:
+          hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
+            gameData.hints[1].ts
+          }`;
+          break;
+        case 1:
+          hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
+            gameData.hints[1].hint
+          }`;
+          break;
+      }
+
+      return new EmbedBuilder()
+        .setColor(0xffffff)
+        .setTitle(gameData.title)
+        .setAuthor({
+          name: "Guess the Place",
+          iconURL,
+        })
+        .setDescription(gameData.description)
+        .setFields(
+          {
+            name: "Instructions",
+            value: `${gameInstructions.map((i) => `• ${i}`).join("\n")}`,
+          },
+          {
+            name: "Hints",
+            value: hints,
+          }
+        )
+        .setImage(gameData.image)
+        .setTimestamp()
+        .setFooter({ text: `MLU | ${gameData.gameId}` });
     }
-
-    return new EmbedBuilder()
-      .setColor(0xffffff)
-      .setTitle(gameData!.title)
-      .setAuthor({
-        name: "Guess the Place",
-        iconURL,
-      })
-      .setFields(
-        {
-          name: "Instructions",
-          value: `${gameInstructions.map((i) => `• ${i}`).join("\n")}`,
-        },
-        {
-          name: "Hints",
-          value: hints,
-        }
-      )
-      .setImage(gameData!.image)
-      .setTimestamp()
-      .setFooter({ text: `MLU | ${gameData!.gameId}` });
   } catch (e) {
     console.error(e);
   }

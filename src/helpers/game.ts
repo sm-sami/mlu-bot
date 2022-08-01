@@ -6,7 +6,8 @@ export const createNewGame = async (
   answer: string,
   image: string,
   title: string,
-  hints: Array<string>
+  hints: Array<string>,
+  description: string
 ) => {
   try {
     const db = await getDatabase();
@@ -16,6 +17,7 @@ export const createNewGame = async (
     const gameId = getId();
     await db.collection("games").insertOne({
       gameId,
+      description,
       answer,
       image,
       title,

@@ -38,6 +38,9 @@ export = {
           option.setName("hint2").setDescription("Hint #2").setRequired(true)
         )
         .addStringOption((option) =>
+          option.setName("description").setDescription("Set the description")
+        )
+        .addStringOption((option) =>
           option.setName("title").setDescription("Title of the game")
         )
     )
@@ -62,9 +65,18 @@ export = {
         interaction.options.getString("hint1") || "",
         interaction.options.getString("hint2") || "",
       ];
+      const description =
+        interaction.options.getString("description") ||
+        "Hallo\nYet Another Guess the Place";
 
       try {
-        const gameId = await createNewGame(answer, image, title, hints);
+        const gameId = await createNewGame(
+          answer,
+          image,
+          title,
+          hints,
+          description
+        );
         if (gameId) {
           const gameEmbed = await createGameEmbed(gameId);
           const confirmButtonRow = await createConfirmButton();

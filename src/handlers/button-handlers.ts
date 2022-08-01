@@ -17,7 +17,11 @@ import {
   createCreateChannelButton,
   createGameEmbed,
 } from "../utils/create";
-import { chatGamesCategoryId, chatGamesRole } from "../utils/constants";
+import {
+  chatGamesCategoryId,
+  chatGamesRole,
+  moderatorRoleId,
+} from "../utils/constants";
 import { getGameIdFromEmbed } from "../utils";
 
 export const handleConfirmButton = async (interaction: ButtonInteraction) => {
@@ -70,6 +74,10 @@ export const handleCreateChannelButton = async (
               PermissionsBitField.Flags.ViewChannel,
               PermissionsBitField.Flags.ManageChannels,
             ],
+          },
+          {
+            id: moderatorRoleId,
+            allow: [PermissionsBitField.Flags.ViewChannel],
           },
           {
             id: interaction.guild.roles.everyone,

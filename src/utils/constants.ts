@@ -7,6 +7,7 @@ if (!process.env.GUILD_ID) console.error("Bot requires GUILD_ID in .env");
 const token: string = process.env.TOKEN || "";
 const clientId: string = process.env.CLIENT_ID || "";
 const guildId: string = process.env.GUILD_ID || "";
+const moderatorRoleId: string = process.env.MODERATOR_ROLE_ID || "";
 const chatGamesRole: string = process.env.CHAT_GAMES_ROLE || "";
 const chatGamesCategoryId: string = process.env.CATEGORY_ID || "";
 const channelId: string = process.env.GAME_CHANNEL_ID || "";
@@ -28,6 +29,7 @@ export {
   token,
   clientId,
   guildId,
+  moderatorRoleId,
   chatGamesRole,
   chatGamesCategoryId,
   channelId,
