@@ -39,7 +39,7 @@ export const handleConfirmButton = async (interaction: ButtonInteraction) => {
     });
 
     if (message) {
-      await setPosted(getGameIdFromEmbed(message));
+      await setPosted(getGameIdFromEmbed(message), message.id);
       await cleanUpGames();
       await wait(1000 * 60 * 60 * 24);
       gameEmbed = await createGameEmbed(getGameIdFromEmbed(message), 0);
@@ -64,6 +64,13 @@ export const handleCreateChannelButton = async (
         type: ChannelType.GuildText,
         parent: chatGamesCategoryId,
         permissionOverwrites: [
+          {
+            id: interaction.message.author.id,
+            allow: [
+              PermissionsBitField.Flags.ViewChannel,
+              PermissionsBitField.Flags.ManageChannels,
+            ],
+          },
           {
             id: interaction.guild.roles.everyone,
             deny: [PermissionsBitField.Flags.ViewChannel],

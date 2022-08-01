@@ -5,8 +5,13 @@ import {
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createNewGame } from "../helpers";
-import { createGameEmbed, createConfirmButton } from "../utils/create";
+import { createNewGame, getGameData } from "../helpers";
+import {
+  createGameEmbed,
+  createConfirmButton,
+  createCreateChannelButton,
+} from "../utils/create";
+import { getGameStates } from "../helpers/game";
 
 export = {
   data: new SlashCommandBuilder()
@@ -17,6 +22,12 @@ export = {
       subcommand
         .setName("create")
         .setDescription("To start a new Guess the Place instance")
+        .addStringOption((option) =>
+          option
+            .setName("answer")
+            .setDescription("The answer to the Guess the Place")
+            .setRequired(true)
+        )
         .addStringOption((option) =>
           option.setName("image").setDescription("Image url").setRequired(true)
         )
@@ -29,38 +40,76 @@ export = {
         .addStringOption((option) =>
           option.setName("title").setDescription("Title of the game")
         )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("end")
+        .setDescription("To end a Guess the Place")
+        .addStringOption((option) =>
+          option
+            .setName("id")
+            .setDescription("The ID of the game instance")
+            .setRequired(true)
+        )
     ),
 
   async handle(interaction: ChatInputCommandInteraction) {
-    const image = interaction.options.getString("image") || "";
-    const title = interaction.options.getString("title") || "Guess the Place";
-    const hints = [
-      interaction.options.getString("hint1") || "",
-      interaction.options.getString("hint2") || "",
-    ];
+    if (interaction.options.getSubcommand() === "create") {
+      const answer = interaction.options.getString("answer") || "Answer";
+      const image = interaction.options.getString("image") || "";
+      const title = interaction.options.getString("title") || "Guess the Place";
+      const hints = [
+        interaction.options.getString("hint1") || "",
+        interaction.options.getString("hint2") || "",
+      ];
 
-    try {
-      const gameId = await createNewGame(image, title, hints);
-      if (gameId) {
-        const gameEmbed = await createGameEmbed(gameId);
-        const confirmButtonRow = await createConfirmButton();
+      try {
+        const gameId = await createNewGame(answer, image, title, hints);
+        if (gameId) {
+          const gameEmbed = await createGameEmbed(gameId);
+          const confirmButtonRow = await createConfirmButton();
 
-        if (gameEmbed && confirmButtonRow) {
-          await interaction.reply({
-            content: `Do you want to post this?`,
-            embeds: [gameEmbed],
-            ephemeral: true,
-            components: [confirmButtonRow],
-          });
-          await wait(1000 * 60 * 10);
-          const confirmButtonDisabledRow = await createConfirmButton(true);
-          await interaction.editReply({
-            components: [confirmButtonDisabledRow],
-          });
+          if (gameEmbed && confirmButtonRow) {
+            await interaction.reply({
+              content: `Do you want to post this?`,
+              embeds: [gameEmbed],
+              ephemeral: true,
+              components: [confirmButtonRow],
+            });
+            await wait(1000 * 60 * 10);
+            const confirmButtonDisabledRow = await createConfirmButton(true);
+            await interaction.editReply({
+              components: [confirmButtonDisabledRow],
+            });
+          }
         }
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
+    } else if (interaction.options.getSubcommand() === "end") {
+      const gameId = interaction.options.getString("id") || "";
+
+      try {
+        if (interaction.guild) {
+          const gameStates = await getGameStates(gameId);
+          if (gameStates) {
+            for (const state of gameStates) {
+              await interaction.guild.channels.delete(state.channelId);
+            }
+            const gameData = await getGameData(gameStates[0].gameId);
+            if (gameData && interaction.channel) {
+              const createChannelButtonDisabledRow =
+                await createCreateChannelButton(true);
+              await interaction.channel.messages.edit(gameData.messageId, {
+                components: [createChannelButtonDisabledRow],
+              });
+            }
+          }
+          await interaction.reply(`Ended game with ID \`${gameId}\``);
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   },
 };
