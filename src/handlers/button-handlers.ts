@@ -7,7 +7,6 @@ import {
   ChannelType,
 } from "discord.js";
 import {
-  cleanUpGames,
   saveGameState,
   setPosted,
   doesPlayerHaveChannel,
@@ -27,8 +26,9 @@ import { getGameIdFromEmbed } from "../utils";
 export const handleConfirmButton = async (interaction: ButtonInteraction) => {
   await interaction.deferUpdate();
 
-  if (interaction.channel) {
-    let gameEmbed = await createGameEmbed();
+  if (interaction.channel && interaction.message) {
+    const gameId = getGameIdFromEmbed(interaction.message);
+    let gameEmbed = await createGameEmbed(gameId);
     const createChannelButtonRow = await createCreateChannelButton();
     const message = await interaction.channel.send({
       content: `${roleMention(chatGamesRole)}`,
@@ -44,7 +44,6 @@ export const handleConfirmButton = async (interaction: ButtonInteraction) => {
 
     if (message) {
       await setPosted(getGameIdFromEmbed(message), message.id);
-      await cleanUpGames();
       await wait(1000 * 60 * 60 * 24);
       gameEmbed = await createGameEmbed(getGameIdFromEmbed(message), 0);
       message.edit({ embeds: [gameEmbed!] });

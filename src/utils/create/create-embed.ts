@@ -96,7 +96,7 @@ export const createLeaderboardEmbed = async () => {
   }
 };
 
-export const createGameEmbed = async (gameId?: string, revealHint?: 0 | 1) => {
+export const createGameEmbed = async (gameId: string, revealHint?: 0 | 1) => {
   try {
     const gameData = await getGameData(gameId);
 

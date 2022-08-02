@@ -11,7 +11,7 @@ import {
   createConfirmButton,
   createCreateChannelButton,
 } from "../utils/create";
-import { getGameStates } from "../helpers/game";
+import { cleanUpGames, getGameStates } from "../helpers/game";
 
 export = {
   data: new SlashCommandBuilder()
@@ -89,6 +89,7 @@ export = {
               components: [confirmButtonRow],
             });
             await wait(1000 * 60 * 10);
+            await cleanUpGames();
             const confirmButtonDisabledRow = await createConfirmButton(true);
             await interaction.editReply({
               components: [confirmButtonDisabledRow],
@@ -120,6 +121,9 @@ export = {
           await interaction.reply(`Ended game with ID \`${gameId}\``);
         }
       } catch (e) {
+        await interaction.reply(
+          "Either the game has already been ended or I have nothing to clean :sloth:"
+        );
         console.log(e);
       }
     }

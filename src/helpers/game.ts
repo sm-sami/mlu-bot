@@ -11,9 +11,7 @@ export const createNewGame = async (
 ) => {
   try {
     const db = await getDatabase();
-
     const hintsObject = mapHintsWithReleaseTimestamp(hints);
-
     const gameId = getId();
     await db.collection("games").insertOne({
       gameId,
@@ -32,17 +30,10 @@ export const createNewGame = async (
   }
 };
 
-export const getGameData = async (gameId?: string) => {
+export const getGameData = async (gameId: string) => {
   try {
     const db = await getDatabase();
-    if (gameId) return await db.collection("games").findOne({ gameId });
-
-    const [gameData] = await db
-      .collection("games")
-      .find({ isPosted: false })
-      .sort({ createdAt: -1 })
-      .toArray();
-    return gameData;
+    return await db.collection("games").findOne({ gameId });
   } catch (e) {
     console.log(e);
   }
@@ -51,7 +42,6 @@ export const getGameData = async (gameId?: string) => {
 export const setPosted = async (gameId: string, messageId: string) => {
   try {
     const db = await getDatabase();
-
     await db
       .collection("games")
       .updateOne({ gameId }, { $set: { isPosted: true, messageId } });
@@ -63,7 +53,6 @@ export const setPosted = async (gameId: string, messageId: string) => {
 export const cleanUpGames = async () => {
   try {
     const db = await getDatabase();
-
     await db.collection("games").deleteMany({ isPosted: false });
   } catch (e) {
     console.log(e);
@@ -77,7 +66,6 @@ export const saveGameState = async (
 ) => {
   try {
     const db = await getDatabase();
-
     await db.collection("game_state").insertOne({ userId, gameId, channelId });
   } catch (e) {
     console.log(e);
@@ -87,7 +75,6 @@ export const saveGameState = async (
 export const doesPlayerHaveChannel = async (userId: string, gameId: string) => {
   try {
     const db = await getDatabase();
-
     return await db
       .collection("game_state")
       .findOne({ userId, gameId }, { projection: { _id: 0, channelId: 1 } });
@@ -99,7 +86,6 @@ export const doesPlayerHaveChannel = async (userId: string, gameId: string) => {
 export const getGameStates = async (gameId: string) => {
   try {
     const db = await getDatabase();
-
     return await db
       .collection("game_state")
       .find({ gameId }, { projection: { _id: 0 } })
