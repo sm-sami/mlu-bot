@@ -10,7 +10,7 @@ import {
   saveGameState,
   setPosted,
   doesPlayerHaveChannel,
-} from "../helpers/game";
+} from "../controllers/game";
 import {
   createConfirmButton,
   createCreateChannelButton,

@@ -5,13 +5,13 @@ import {
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createNewGame, getGameData } from "../helpers";
+import { createNewGame, getGameData } from "../controllers";
 import {
   createGameEmbed,
   createConfirmButton,
   createCreateChannelButton,
 } from "../utils/create";
-import { cleanUpGames, getGameStates } from "../helpers/game";
+import { cleanUpGames, getGameStates } from "../controllers/game";
 
 export = {
   data: new SlashCommandBuilder()
