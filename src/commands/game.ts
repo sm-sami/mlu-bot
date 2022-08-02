@@ -109,21 +109,18 @@ export = {
             for (const state of gameStates) {
               await interaction.guild.channels.delete(state.channelId);
             }
-            const gameData = await getGameData(gameStates[0].gameId);
-            if (gameData && interaction.channel) {
-              const createChannelButtonDisabledRow =
-                await createCreateChannelButton(true);
-              await interaction.channel.messages.edit(gameData.messageId, {
-                components: [createChannelButtonDisabledRow],
-              });
-            }
+          }
+          const gameData = await getGameData(gameId);
+          if (gameData && interaction.channel) {
+            const createChannelButtonDisabledRow =
+              await createCreateChannelButton(true);
+            await interaction.channel.messages.edit(gameData.messageId, {
+              components: [createChannelButtonDisabledRow],
+            });
           }
           await interaction.reply(`Ended game with ID \`${gameId}\``);
         }
       } catch (e) {
-        await interaction.reply(
-          "Either the game has already been ended or I have nothing to clean :sloth:"
-        );
         console.log(e);
       }
     }
