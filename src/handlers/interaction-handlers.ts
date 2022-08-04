@@ -1,6 +1,9 @@
 import path from "node:path";
 import { ChatInputCommandInteraction, ButtonInteraction } from "discord.js";
-import { handleConfirmButton } from "./button-handlers";
+import {
+  handleConfirmButton,
+  handleCreateChannelButton,
+} from "./button-handlers";
 
 export const handleInputCommandInteraction = async (
   interaction: ChatInputCommandInteraction
@@ -20,6 +23,9 @@ export const handleButtonInteraction = async (
   switch (buttonId) {
     case "confirm-post":
       await handleConfirmButton(interaction);
+      break;
+    case "create-channel":
+      await handleCreateChannelButton(interaction);
       break;
   }
 };

@@ -1,18 +1,30 @@
-import { setTimeout as wait } from "node:timers/promises";
-import { ButtonInteraction, roleMention } from "discord.js";
-import { cleanUpGames, setPosted } from "../helpers/game";
-import { createConfirmButton, createGameEmbed } from "../utils/create";
+import {
+  ButtonInteraction,
+  channelMention,
+  roleMention,
+  ChannelType,
+} from "discord.js";
+import { doesPlayerHaveChannel } from "../controllers";
+import {
+  createConfirmButton,
+  createCreateChannelButton,
+  createGameEmbed,
+} from "../utils/create";
 import { chatGamesRole } from "../utils/constants";
 import { getGameIdFromEmbed } from "../utils";
+import { createGuessChannel, updateGameState } from "../programs/game";
 
 export const handleConfirmButton = async (interaction: ButtonInteraction) => {
   await interaction.deferUpdate();
-  let gameEmbed = await createGameEmbed();
 
-  if (interaction.channel) {
+  if (interaction.channel && interaction.message) {
+    const gameId = getGameIdFromEmbed(interaction.message);
+    const gameEmbed = await createGameEmbed(gameId);
+    const createChannelButtonRow = await createCreateChannelButton();
     const message = await interaction.channel.send({
       content: `${roleMention(chatGamesRole)}`,
       embeds: [gameEmbed!],
+      components: [createChannelButtonRow],
     });
     const confirmButtonDisabledRow = await createConfirmButton(true);
     await interaction.editReply({ components: [confirmButtonDisabledRow] });
@@ -21,15 +33,35 @@ export const handleConfirmButton = async (interaction: ButtonInteraction) => {
       ephemeral: true,
     });
 
-    if (message) {
-      await setPosted(getGameIdFromEmbed(message));
-      await cleanUpGames();
-      await wait(1000 * 60 * 60 * 24);
-      gameEmbed = await createGameEmbed(getGameIdFromEmbed(message), 0);
-      message.edit({ embeds: [gameEmbed!] });
-      await wait(3000);
-      gameEmbed = await createGameEmbed(getGameIdFromEmbed(message), 1);
-      message.edit({ embeds: [gameEmbed!] });
-    }
+    if (message) await updateGameState(message);
   }
+};
+
+export const handleCreateChannelButton = async (
+  interaction: ButtonInteraction
+) => {
+  const gameId = getGameIdFromEmbed(interaction.message);
+  const playerState = await doesPlayerHaveChannel(interaction.user.id, gameId);
+
+  if (interaction.guild) {
+    if (!playerState) {
+      const channel = await createGuessChannel(interaction, gameId);
+      if (channel) {
+        await interaction.reply({
+          content: `Make a guess in ${channelMention(channel.id)} :smile:`,
+          ephemeral: true,
+        });
+      }
+      return;
+    }
+    await interaction.reply({
+      content: `You already have a channel to guess ${channelMention(
+        playerState.channelId
+      )} :sloth:`,
+      ephemeral: true,
+    });
+    return;
+  }
+
+  await interaction.reply("Something went wrong :pensive:");
 };

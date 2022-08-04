@@ -1,12 +1,11 @@
-import { setTimeout as wait } from "node:timers/promises";
 import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createNewGame } from "../helpers";
-import { createGameEmbed, createConfirmButton } from "../utils/create";
+import { createNewGame } from "../controllers";
+import { deleteChannels, endGame, sendPreviewEmbed } from "../programs/game";
 
 export = {
   data: new SlashCommandBuilder()
@@ -18,6 +17,12 @@ export = {
         .setName("create")
         .setDescription("To start a new Guess the Place instance")
         .addStringOption((option) =>
+          option
+            .setName("answer")
+            .setDescription("The answer to the Guess the Place")
+            .setRequired(true)
+        )
+        .addStringOption((option) =>
           option.setName("image").setDescription("Image url").setRequired(true)
         )
         .addStringOption((option) =>
@@ -27,40 +32,57 @@ export = {
           option.setName("hint2").setDescription("Hint #2").setRequired(true)
         )
         .addStringOption((option) =>
+          option.setName("description").setDescription("Set the description")
+        )
+        .addStringOption((option) =>
           option.setName("title").setDescription("Title of the game")
+        )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("end")
+        .setDescription("To end a Guess the Place")
+        .addStringOption((option) =>
+          option
+            .setName("id")
+            .setDescription("The ID of the game instance")
+            .setRequired(true)
         )
     ),
 
   async handle(interaction: ChatInputCommandInteraction) {
-    const image = interaction.options.getString("image") || "";
-    const title = interaction.options.getString("title") || "Guess the Place";
-    const hints = [
-      interaction.options.getString("hint1") || "",
-      interaction.options.getString("hint2") || "",
-    ];
+    if (interaction.options.getSubcommand() === "create") {
+      const answer = interaction.options.getString("answer") || "Answer";
+      const image = interaction.options.getString("image") || "";
+      const title = interaction.options.getString("title") || "Guess the Place";
+      const hints = [
+        interaction.options.getString("hint1") || "",
+        interaction.options.getString("hint2") || "",
+      ];
+      const description =
+        interaction.options.getString("description") ||
+        "Hallo\nYet Another Guess the Place";
 
-    try {
-      const gameId = await createNewGame(image, title, hints);
-      if (gameId) {
-        const gameEmbed = await createGameEmbed(gameId);
-        const confirmButtonRow = await createConfirmButton();
-
-        if (gameEmbed && confirmButtonRow) {
-          await interaction.reply({
-            content: `Do you want to post this?`,
-            embeds: [gameEmbed],
-            ephemeral: true,
-            components: [confirmButtonRow],
-          });
-          await wait(1000 * 60 * 10);
-          const confirmButtonDisabledRow = await createConfirmButton(true);
-          await interaction.editReply({
-            components: [confirmButtonDisabledRow],
-          });
-        }
+      try {
+        const gameId = await createNewGame(
+          answer,
+          image,
+          title,
+          hints,
+          description
+        );
+        if (gameId) await sendPreviewEmbed(interaction, gameId);
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
+    } else if (interaction.options.getSubcommand() === "end") {
+      const gameId = interaction.options.getString("id") || "";
+      await deleteChannels(interaction, gameId);
+      await endGame(interaction, gameId);
+      await interaction.reply({
+        content: `Ended game with ID \`${gameId}\``,
+        ephemeral: true,
+      });
     }
   },
 };
