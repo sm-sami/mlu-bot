@@ -1,17 +1,11 @@
-import { setTimeout as wait } from "node:timers/promises";
 import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createNewGame, getGameData } from "../controllers";
-import {
-  createGameEmbed,
-  createConfirmButton,
-  createCreateChannelButton,
-} from "../utils/create";
-import { cleanUpGames, getGameStates } from "../controllers/game";
+import { createNewGame } from "../controllers";
+import { deleteChannels, endGame, sendPreviewEmbed } from "../programs/game";
 
 export = {
   data: new SlashCommandBuilder()
@@ -77,52 +71,18 @@ export = {
           hints,
           description
         );
-        if (gameId) {
-          const gameEmbed = await createGameEmbed(gameId);
-          const confirmButtonRow = await createConfirmButton();
-
-          if (gameEmbed && confirmButtonRow) {
-            await interaction.reply({
-              content: `Do you want to post this?`,
-              embeds: [gameEmbed],
-              ephemeral: true,
-              components: [confirmButtonRow],
-            });
-            await wait(1000 * 60 * 10);
-            await cleanUpGames();
-            const confirmButtonDisabledRow = await createConfirmButton(true);
-            await interaction.editReply({
-              components: [confirmButtonDisabledRow],
-            });
-          }
-        }
+        if (gameId) await sendPreviewEmbed(interaction, gameId);
       } catch (e) {
         console.error(e);
       }
     } else if (interaction.options.getSubcommand() === "end") {
       const gameId = interaction.options.getString("id") || "";
-
-      try {
-        if (interaction.guild) {
-          const gameStates = await getGameStates(gameId);
-          if (gameStates) {
-            for (const state of gameStates) {
-              await interaction.guild.channels.delete(state.channelId);
-            }
-          }
-          const gameData = await getGameData(gameId);
-          if (gameData && interaction.channel) {
-            const createChannelButtonDisabledRow =
-              await createCreateChannelButton(true);
-            await interaction.channel.messages.edit(gameData.messageId, {
-              components: [createChannelButtonDisabledRow],
-            });
-          }
-          await interaction.reply(`Ended game with ID \`${gameId}\``);
-        }
-      } catch (e) {
-        console.log(e);
-      }
+      await deleteChannels(interaction, gameId);
+      await endGame(interaction, gameId);
+      await interaction.reply({
+        content: `Ended game with ID \`${gameId}\``,
+        ephemeral: true,
+      });
     }
   },
 };

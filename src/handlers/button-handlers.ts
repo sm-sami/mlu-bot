@@ -4,7 +4,7 @@ import {
   roleMention,
   ChannelType,
 } from "discord.js";
-import { doesPlayerHaveChannel } from "../controllers/game";
+import { doesPlayerHaveChannel } from "../controllers";
 import {
   createConfirmButton,
   createCreateChannelButton,
@@ -12,10 +12,7 @@ import {
 } from "../utils/create";
 import { chatGamesRole } from "../utils/constants";
 import { getGameIdFromEmbed } from "../utils";
-import {
-  createGuessChannelAndSaveState,
-  updateGameState,
-} from "../programs/game";
+import { createGuessChannel, updateGameState } from "../programs/game";
 
 export const handleConfirmButton = async (interaction: ButtonInteraction) => {
   await interaction.deferUpdate();
@@ -48,7 +45,7 @@ export const handleCreateChannelButton = async (
 
   if (interaction.guild) {
     if (!playerState) {
-      const channel = await createGuessChannelAndSaveState(interaction, gameId);
+      const channel = await createGuessChannel(interaction, gameId);
       if (channel) {
         await interaction.reply({
           content: `Make a guess in ${channelMention(channel.id)} :smile:`,

@@ -39,12 +39,27 @@ export const getGameData = async (gameId: string) => {
   }
 };
 
-export const setPosted = async (gameId: string, messageId: string) => {
+export const setPosted = async (
+  gameId: string,
+  messageId: string,
+  threadId: string
+) => {
   try {
     const db = await getDatabase();
     await db
       .collection("games")
-      .updateOne({ gameId }, { $set: { isPosted: true, messageId } });
+      .updateOne({ gameId }, { $set: { isPosted: true, messageId, threadId } });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getHints = async (gameId: string) => {
+  try {
+    const db = await getDatabase();
+    return await db
+      .collection("games")
+      .findOne({ gameId }, { projection: { _id: 0, hints: 1 } });
   } catch (e) {
     console.log(e);
   }
