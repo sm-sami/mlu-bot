@@ -3,7 +3,7 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
 } from "discord.js";
-import { addChatTrigger, loadChatTriggers } from "../controllers/triggers";
+import { addChatTrigger } from "../controllers/triggers";
 
 export = {
   data: new SlashCommandBuilder()
@@ -22,36 +22,27 @@ export = {
         )
         .addStringOption((option) =>
           option
-            .setName("trigger1")
+            .setName("trigger")
             .setDescription("Add a trigger")
             .setRequired(true)
-        )
-        .addStringOption((option) =>
-          option.setName("trigger2").setDescription("Add another trigger")
-        )
-        .addStringOption((option) =>
-          option.setName("trigger3").setDescription("Add another trigger")
         )
     ),
 
   async handle(interaction: ChatInputCommandInteraction) {
     const response = interaction.options.getString("response");
-    const triggers = [...Array(3)]
-      .map((_, index) => interaction.options.getString(`trigger${index + 1}`))
-      .filter(Boolean);
+    const trigger = interaction.options.getString("trigger");
 
     try {
-      if (response) {
-        const isTriggerAdded = await addChatTrigger(
-          triggers as Array<string>,
-          response
-        );
-        if (isTriggerAdded)
+      if (response && trigger) {
+        const isTriggerAdded = await addChatTrigger(trigger, response);
+        if (isTriggerAdded) {
           await interaction.reply("Trigger added successfully :smile:");
-        return;
+          return;
+        }
       }
-
-      await interaction.reply("Something went wrong :pensive:");
+      await interaction.reply(
+        "Something went wrong, or the trigger already exists! :sloth:"
+      );
     } catch (e) {
       console.error(e);
     }

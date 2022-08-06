@@ -13,6 +13,7 @@ import {
 import { deployCommands } from "./utils/deploy-commands";
 import { initializeClient } from "./utils/database";
 import { token } from "./utils/constants";
+import { loadChatTriggers } from "./programs/triggers";
 
 const bot = new Client({
   intents: [
@@ -44,5 +45,5 @@ bot
   .login(token)
   .then(() => bot.user!.setActivity("/stats"))
   .then(() => deployCommands())
-  .then(() => initializeClient())
+  .then(() => loadChatTriggers())
   .catch(() => console.error);

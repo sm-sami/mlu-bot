@@ -1,8 +1,11 @@
 import { Message } from "discord.js";
+import { getReplyToChatTrigger } from "../programs/triggers";
 
 export const handleGuildTextMessage = async (message: Message) => {
-  const regex = /muhammad/i;
-  if (regex.test(message.content)) {
-    await message.reply("Hi, how can I help you? :smile:");
+  try {
+    const response = await getReplyToChatTrigger(message);
+    if (response) await message.reply(response);
+  } catch (e) {
+    console.log(e);
   }
 };

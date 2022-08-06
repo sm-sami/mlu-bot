@@ -1,7 +1,7 @@
 import { v4 as getId } from "uuid";
 import { getDatabase } from "../utils/database";
 
-export const loadChatTriggers = async () => {
+export const getChatTriggers = async () => {
   try {
     const db = await getDatabase();
     return await db
@@ -13,16 +13,22 @@ export const loadChatTriggers = async () => {
   }
 };
 
-export const addChatTrigger = async (
-  triggers: Array<string>,
-  response: string
-) => {
+export const addChatTrigger = async (trigger: string, response: string) => {
   try {
     const db = await getDatabase();
-    const { insertedId } = await db
+    const triggerData = await db
       .collection("triggers")
-      .insertOne({ triggerId: getId(), triggers, response });
-    return !!insertedId;
+      .findOne({ response, triggers: { $elemMatch: { trigger } } });
+    if (!triggerData) {
+      const { modifiedCount, upsertedCount } = await db
+        .collection("triggers")
+        .updateOne(
+          { response },
+          { $push: { triggers: { triggerId: getId(), trigger } } },
+          { upsert: true }
+        );
+      return modifiedCount || upsertedCount;
+    }
   } catch (e) {
     console.log(e);
   }
