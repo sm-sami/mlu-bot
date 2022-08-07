@@ -68,7 +68,7 @@ export const updateGameState = async (message: Message) => {
       }`,
     });
   await message.edit({ embeds: [gameEmbed!] });
-  await wait(3000 * 60 * 60 * 24);
+  await wait(1000 * 60 * 60 * 24 * 2);
   gameEmbed = await createGameEmbed(gameId, 1);
   if (hintsObject)
     await thread.send({
