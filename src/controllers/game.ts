@@ -1,7 +1,7 @@
 import { v4 as getId } from "uuid";
 import { getDatabase } from "../utils/database";
 import { mapHintsWithReleaseTimestamp, mongoDocumentsToJSON } from "../utils";
-import { Game, Hint } from "../types/game";
+import { Game, GameState, Hint } from "../types/game";
 import { Snowflake } from "discord.js";
 
 export const createNewGame = async (
@@ -101,12 +101,16 @@ export const saveGameState = async (
 export const doesPlayerHaveChannel = async (
   userId: Snowflake,
   gameId: string
-) => {
+): Promise<GameState | undefined> => {
   try {
     const db = await getDatabase();
-    return await db
-      .collection("game_state")
-      .findOne({ userId, gameId }, { projection: { _id: 0, channelId: 1 } });
+    return JSON.parse(
+      JSON.stringify(
+        await db
+          .collection("game_state")
+          .findOne({ userId, gameId }, { projection: { _id: 0, channelId: 1 } })
+      )
+    );
   } catch (e) {
     console.log(e);
   }

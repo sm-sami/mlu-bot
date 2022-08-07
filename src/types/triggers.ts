@@ -1,9 +1,9 @@
-export type TriggersWithResponse = {
+export interface TriggersWithResponse {
   response: string;
   triggers: Array<Trigger>;
-};
+}
 
-export type Trigger = {
+export interface Trigger {
   triggerId: string;
   trigger: string;
-};
+}

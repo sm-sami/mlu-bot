@@ -1,6 +1,6 @@
 import { Snowflake } from "discord.js";
 
-export type Game = {
+export interface Game {
   gameId: string;
   title: string;
   description: string;
@@ -11,15 +11,15 @@ export type Game = {
   createdAt: Date;
   messageId: Snowflake;
   threadId: Snowflake;
-};
+}
 
-export type GameState = {
+export interface GameState {
   userId: Snowflake;
   gameId: string;
   channelId: Snowflake;
-};
+}
 
-export type Hint = {
+export interface Hint {
   hint: string;
   timestamp: string;
-};
+}
