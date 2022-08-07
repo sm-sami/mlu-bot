@@ -58,23 +58,19 @@ export const updateGameState = async (message: Message) => {
   const gameId = getGameIdFromEmbed(message);
   const thread = await message.startThread({ name: `Guess the Place` });
   await setPosted(gameId, message.id, thread.id);
-  const hintsObject = await getHints(gameId);
+  const hints = await getHints(gameId);
   await wait(1000 * 60 * 60 * 24);
   let gameEmbed = await createGameEmbed(gameId, 0);
-  if (hintsObject)
+  if (hints)
     await thread.send({
-      content: `[${roleMention(chatGamesRole)}] hint #1: ${
-        hintsObject.hints[0].hint
-      }`,
+      content: `[${roleMention(chatGamesRole)}] hint #1: ${hints[0].hint}`,
     });
   await message.edit({ embeds: [gameEmbed!] });
   await wait(1000 * 60 * 60 * 24 * 2);
   gameEmbed = await createGameEmbed(gameId, 1);
-  if (hintsObject)
+  if (hints)
     await thread.send({
-      content: `[${roleMention(chatGamesRole)}] hint #1: ${
-        hintsObject.hints[1].hint
-      }`,
+      content: `[${roleMention(chatGamesRole)}] hint #2: ${hints[1].hint}`,
     });
   await message.edit({ embeds: [gameEmbed!] });
 };

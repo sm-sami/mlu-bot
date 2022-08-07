@@ -1,25 +1,27 @@
 import { Message } from "discord.js";
-import { getChatTriggers } from "../controllers/triggers";
+import { getChatTriggers } from "../controllers";
+import { Trigger, TriggersWithResponse } from "../types/triggers";
 
-let triggerData: any;
+let triggers: Array<TriggersWithResponse>;
 let lastUpdated: number;
 
 export const loadChatTriggers = async () => {
   if (!lastUpdated || Date.now() - lastUpdated > 1000 * 60 * 30) {
-    triggerData = await getChatTriggers();
+    triggers = (await getChatTriggers()) || [];
     console.log("✔️Loaded Chat Triggers");
     lastUpdated = Date.now();
   }
-  return triggerData;
+  return triggers;
 };
 
 export const getReplyToChatTrigger = async (message: Message) => {
-  const triggerData = await loadChatTriggers();
-  for (const data of triggerData) {
+  const triggers = await loadChatTriggers();
+  for (const data of triggers) {
     if (
-      data.triggers.some((trigger: { triggerId: string; trigger: string }) =>
-        trigger.trigger.includes(message.content.toLowerCase())
+      data.triggers.some((trigger: Trigger) =>
+        message.content.toLowerCase().includes(trigger.trigger)
       )
-    ) return data.response;
+    )
+      return data.response;
   }
 };

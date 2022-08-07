@@ -1,6 +1,8 @@
 import { v4 as getId } from "uuid";
 import { getDatabase } from "../utils/database";
-import { mapHintsWithReleaseTimestamp } from "../utils";
+import { mapHintsWithReleaseTimestamp, mongoDocumentsToJSON } from "../utils";
+import { Game, Hint } from "../types/game";
+import { Snowflake } from "discord.js";
 
 export const createNewGame = async (
   answer: string,
@@ -8,7 +10,7 @@ export const createNewGame = async (
   title: string,
   hints: Array<string>,
   description: string
-) => {
+): Promise<string | undefined> => {
   try {
     const db = await getDatabase();
     const hintsObject = mapHintsWithReleaseTimestamp(hints);
@@ -30,10 +32,14 @@ export const createNewGame = async (
   }
 };
 
-export const getGameData = async (gameId: string) => {
+export const getGameData = async (
+  gameId: string
+): Promise<Game | undefined> => {
   try {
     const db = await getDatabase();
-    return await db.collection("games").findOne({ gameId });
+    return JSON.parse(
+      JSON.stringify(await db.collection("games").findOne({ gameId }))
+    );
   } catch (e) {
     console.log(e);
   }
@@ -41,8 +47,8 @@ export const getGameData = async (gameId: string) => {
 
 export const setPosted = async (
   gameId: string,
-  messageId: string,
-  threadId: string
+  messageId: Snowflake,
+  threadId: Snowflake
 ) => {
   try {
     const db = await getDatabase();
@@ -54,12 +60,17 @@ export const setPosted = async (
   }
 };
 
-export const getHints = async (gameId: string) => {
+export const getHints = async (gameId: string): Promise<Hint[] | undefined> => {
   try {
     const db = await getDatabase();
-    return await db
-      .collection("games")
-      .findOne({ gameId }, { projection: { _id: 0, hints: 1 } });
+    const { hints } = JSON.parse(
+      JSON.stringify(
+        await db
+          .collection("games")
+          .findOne({ gameId }, { projection: { _id: 0, hints: 1 } })
+      )
+    );
+    return hints;
   } catch (e) {
     console.log(e);
   }
@@ -75,9 +86,9 @@ export const cleanUpGames = async () => {
 };
 
 export const saveGameState = async (
-  userId: string,
+  userId: Snowflake,
   gameId: string,
-  channelId: string
+  channelId: Snowflake
 ) => {
   try {
     const db = await getDatabase();
@@ -87,7 +98,10 @@ export const saveGameState = async (
   }
 };
 
-export const doesPlayerHaveChannel = async (userId: string, gameId: string) => {
+export const doesPlayerHaveChannel = async (
+  userId: Snowflake,
+  gameId: string
+) => {
   try {
     const db = await getDatabase();
     return await db
@@ -101,10 +115,12 @@ export const doesPlayerHaveChannel = async (userId: string, gameId: string) => {
 export const getGameStates = async (gameId: string) => {
   try {
     const db = await getDatabase();
-    return await db
-      .collection("game_state")
-      .find({ gameId }, { projection: { _id: 0 } })
-      .toArray();
+    return mongoDocumentsToJSON(
+      await db
+        .collection("game_state")
+        .find({ gameId }, { projection: { _id: 0 } })
+        .toArray()
+    );
   } catch (e) {
     console.log(e);
   }
