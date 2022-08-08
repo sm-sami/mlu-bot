@@ -39,3 +39,18 @@ export const addChatTrigger = async (trigger: string, response: string) => {
     console.log(e);
   }
 };
+
+export const deleteChatTrigger = async (triggerId: string) => {
+  try {
+    const db = await getDatabase();
+    const { modifiedCount } = await db
+      .collection("triggers")
+      .updateOne(
+        { triggers: { $elemMatch: { triggerId } } },
+        { $pull: { triggers: { triggerId } } }
+      );
+    return modifiedCount;
+  } catch (e) {
+    console.log(e);
+  }
+};
