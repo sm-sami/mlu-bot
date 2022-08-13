@@ -101,20 +101,13 @@ export const createGameEmbed = async (gameId: string, revealHint?: 0 | 1) => {
     const gameData = await getGameData(gameId);
 
     if (gameData) {
-      let hints = `hint #1: ${gameData.hints[0].ts}\nhint #2: ${
-        gameData!.hints[1].ts
-      }`;
-
+      let hints = `hint #1: ${gameData.hints[0].timestamp}\nhint #2: ${gameData.hints[1].timestamp}`;
       switch (revealHint) {
         case 0:
-          hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
-            gameData.hints[1].ts
-          }`;
+          hints = `hint #1: ${gameData.hints[0].hint}\nhint #2: ${gameData.hints[1].timestamp}`;
           break;
         case 1:
-          hints = `hint #1: ${gameData!.hints[0].hint}\nhint #2: ${
-            gameData.hints[1].hint
-          }`;
+          hints = `hint #1: ${gameData.hints[0].hint}\nhint #2: ${gameData.hints[1].hint}`;
           break;
       }
 

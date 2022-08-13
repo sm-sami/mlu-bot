@@ -1,5 +1,7 @@
 import { User } from "discord.js";
 import { getDatabase } from "../utils/database";
+import { mongoDocumentsToJSON } from "../utils";
+import { GameUser } from "../types/user";
 
 export const updateUserPoints = async (user: User, points: number) => {
   try {
@@ -17,24 +19,30 @@ export const updateUserPoints = async (user: User, points: number) => {
   }
 };
 
-export const getUserData = async (user: User) => {
+export const getUserData = async (
+  user: User
+): Promise<GameUser | undefined> => {
   try {
     const db = await getDatabase();
-    return await db.collection("users").findOne({ userId: user.id });
+    return JSON.parse(
+      JSON.stringify(await db.collection("users").findOne({ userId: user.id }))
+    );
   } catch (e) {
     console.log(e);
   }
 };
 
-export const getTopTenUsers = async () => {
+export const getTopTenUsers = async (): Promise<GameUser[]> => {
   try {
     const db = await getDatabase();
-    return await db
-      .collection("users")
-      .find({}, { projection: { _id: 0, user: 0 } })
-      .sort({ points: -1, numberOfWins: 1 })
-      .limit(10)
-      .toArray();
+    return mongoDocumentsToJSON(
+      await db
+        .collection("users")
+        .find({}, { projection: { _id: 0, user: 0 } })
+        .sort({ points: -1, numberOfWins: 1 })
+        .limit(10)
+        .toArray()
+    );
   } catch (e) {
     console.log(e);
     return [];
