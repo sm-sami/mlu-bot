@@ -1,7 +1,7 @@
 import { User } from "discord.js";
-import { getDatabase } from "../utils/database";
-import { mongoDocumentsToJSON } from "../utils";
-import { GameUser } from "../types/user";
+import { getDatabase } from "../../utils/database";
+import { GameUser } from "./schema";
+import { mongoDocumentsToJSON } from "../../utils";
 
 export const updateUserPoints = async (user: User, points: number) => {
   try {

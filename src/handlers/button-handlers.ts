@@ -4,7 +4,7 @@ import {
   roleMention,
   ChannelType,
 } from "discord.js";
-import { doesPlayerHaveChannel } from "../controllers";
+import { doesPlayerHaveChannel } from "../programs/game/controllers";
 import {
   createConfirmButton,
   createCreateChannelButton,

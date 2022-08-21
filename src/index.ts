@@ -11,7 +11,6 @@ import {
   handleGuildTextMessage,
 } from "./handlers";
 import { deployCommands } from "./utils/deploy-commands";
-import { initializeClient } from "./utils/database";
 import { token } from "./utils/constants";
 import { loadChatTriggers } from "./programs/triggers";
 

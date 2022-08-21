@@ -4,7 +4,7 @@ import {
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createNewGame } from "../controllers";
+import { createNewGame } from "../programs/game/controllers";
 import { deleteChannels, endGame, sendPreviewEmbed } from "../programs/game";
 
 export = {

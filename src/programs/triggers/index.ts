@@ -1,17 +1,17 @@
 import { Message } from "discord.js";
-import { getChatTriggers } from "../controllers";
-import { Trigger, TriggersWithResponse } from "../types/triggers";
+import { getChatTriggers } from "./controllers";
+import { Trigger, TriggersWithResponse } from "./schema";
 
-let triggers: Array<TriggersWithResponse>;
+let index: Array<TriggersWithResponse>;
 let lastUpdated: number;
 
 export const loadChatTriggers = async () => {
   if (!lastUpdated || Date.now() - lastUpdated > 1000 * 60 * 30) {
-    triggers = (await getChatTriggers()) || [];
+    index = (await getChatTriggers()) || [];
     console.log("✔️Loaded Chat Triggers");
     lastUpdated = Date.now();
   }
-  return triggers;
+  return index;
 };
 
 export const getReplyToChatTrigger = async (message: Message) => {

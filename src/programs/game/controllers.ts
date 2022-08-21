@@ -1,7 +1,10 @@
 import { v4 as getId } from "uuid";
-import { getDatabase } from "../utils/database";
-import { mapHintsWithReleaseTimestamp, mongoDocumentsToJSON } from "../utils";
-import { Game, GameState, Hint } from "../types/game";
+import { getDatabase } from "../../utils/database";
+import {
+  mapHintsWithReleaseTimestamp,
+  mongoDocumentsToJSON,
+} from "../../utils";
+import { Game, GameState, Hint } from "./schema";
 import { Snowflake } from "discord.js";
 
 export const createNewGame = async (

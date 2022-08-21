@@ -14,18 +14,18 @@ import {
   cleanUpGames,
   getGameStates,
   getGameData,
-} from "../controllers";
-import { getGameIdFromEmbed } from "../utils";
+} from "./controllers";
+import { getGameIdFromEmbed } from "../../utils";
 import {
   createConfirmButton,
   createCreateChannelButton,
   createGameEmbed,
-} from "../utils/create";
+} from "../../utils/create";
 import {
   chatGamesRole,
   chatGamesCategoryId,
   moderatorRoleId,
-} from "../utils/constants";
+} from "../../utils/constants";
 
 export const sendPreviewEmbed = async (
   interaction: ChatInputCommandInteraction,
