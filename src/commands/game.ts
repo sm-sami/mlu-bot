@@ -4,8 +4,12 @@ import {
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createNewGame } from "../controllers";
-import { deleteChannels, endGame, sendPreviewEmbed } from "../programs/game";
+import {
+  createNewGame,
+  deleteChannels,
+  endGame,
+  sendPreviewEmbed,
+} from "../programs/game";
 
 export = {
   data: new SlashCommandBuilder()

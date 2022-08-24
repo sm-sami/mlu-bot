@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
-import { getChatTriggers } from "../controllers";
-import { Trigger, TriggersWithResponse } from "../types/triggers";
+import { getChatTriggers } from "./controllers";
+import { Trigger, TriggersWithResponse } from "./schema";
 
 let triggers: Array<TriggersWithResponse>;
 let lastUpdated: number;

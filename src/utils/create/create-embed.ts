@@ -1,5 +1,6 @@
 import { EmbedBuilder, User, userMention } from "discord.js";
-import { getTopTenUsers, getUserData, getGameData } from "../../controllers";
+import { getGameData } from "../../programs/game";
+import { getTopTenUsers, getUserData } from "../../programs/user";
 import { iconURL, gameInstructions } from "../constants";
 
 export const createUserStatsEmbed = async (user: User) => {

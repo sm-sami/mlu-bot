@@ -1,7 +1,7 @@
 import { v4 as getId } from "uuid";
-import { getDatabase } from "../utils/database";
-import { mongoDocumentsToJSON } from "../utils";
-import { TriggersWithResponse } from "../types/triggers";
+import { getDatabase } from "../../utils/database";
+import { mongoDocumentsToJSON } from "../../utils";
+import { TriggersWithResponse } from "./schema";
 
 export const getChatTriggers = async (): Promise<
   TriggersWithResponse[] | undefined

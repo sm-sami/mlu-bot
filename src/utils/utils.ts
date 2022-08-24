@@ -1,6 +1,6 @@
 import { Message, time } from "discord.js";
 import { Document } from "mongodb";
-import { Hint } from "../types/game";
+import { Hint } from "../programs/game/schema";
 
 export const getGameIdFromEmbed = (message: Message): string => {
   if (!message.embeds[0].footer) return "";
