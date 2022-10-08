@@ -4,12 +4,7 @@ import {
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import {
-  createNewGame,
-  deleteChannels,
-  endGame,
-  sendPreviewEmbed,
-} from "../programs/game";
+import { createNewGame, endGame, sendPreviewEmbed } from "../programs/game";
 
 export = {
   data: new SlashCommandBuilder()
@@ -81,9 +76,8 @@ export = {
       }
     } else if (interaction.options.getSubcommand() === "end") {
       const gameId = interaction.options.getString("id") || "";
-      await deleteChannels(interaction, gameId);
       await endGame(interaction, gameId);
-      await interaction.reply({
+      await interaction.followUp({
         content: `Ended game with ID \`${gameId}\``,
         ephemeral: true,
       });

@@ -126,6 +126,10 @@ export const deleteChannels = async (
         try {
           await interaction.guild.channels.delete(state.channelId);
         } catch (e) {
+          await interaction.followUp({
+            content: `Not able to delete #${state.channelId}`,
+            ephemeral: true,
+          });
           console.log(e);
         }
       }
@@ -139,11 +143,16 @@ export const endGame = async (
 ) => {
   const gameData = await getGameData(gameId);
   if (gameData && interaction.channel) {
+    await interaction.reply({
+      content: `Ending game with ID \`${gameData.gameId}\``,
+      ephemeral: true,
+    });
     const createChannelButtonDisabledRow = await createCreateChannelButton(
       true
     );
     await interaction.channel.messages.edit(gameData.messageId, {
       components: [createChannelButtonDisabledRow],
     });
+    await deleteChannels(interaction, gameData.gameId);
   }
 };
