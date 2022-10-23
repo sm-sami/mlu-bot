@@ -13,9 +13,20 @@ export = {
 
   async handle(interaction: ChatInputCommandInteraction) {
     if (canReviveServer()) {
-      await interaction.reply({
-        content: roleMention(serverReviveRoleId),
-      });
+      if (interaction.channel) {
+        await interaction.channel.send({
+          content: roleMention(serverReviveRoleId),
+        });
+        await interaction.reply({
+          content: `Pinged successfully!, you can ping again at <t:${getWaitTime()}:t> :sloth:`,
+          ephemeral: true,
+        });
+      } else {
+        await interaction.reply({
+          content: "Something went wrong :(",
+          ephemeral: true,
+        });
+      }
       return;
     }
 
