@@ -138,3 +138,16 @@ export const createGameEmbed = async (gameId: string, revealHint?: 0 | 1) => {
     console.error(e);
   }
 };
+
+export const createReviveEmbed = (text: string, user: User) => {
+  return new EmbedBuilder()
+    .setColor(0x000000)
+    .setTitle("Server Revive")
+    .setDescription(text)
+    .setFields({
+      name: "Pinged by",
+      value: `${user}`,
+    })
+    .setTimestamp()
+    .setFooter({ text: "MLU | Server Revive" });
+};

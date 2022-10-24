@@ -5,6 +5,7 @@ import {
 } from "discord.js";
 import { serverReviveRoleId } from "../utils/constants";
 import { canReviveServer, getWaitTime } from "../programs/revive";
+import { createReviveEmbed } from "../utils/create/create-embed";
 
 export = {
   data: new SlashCommandBuilder()
@@ -17,15 +18,20 @@ export = {
   async handle(interaction: ChatInputCommandInteraction) {
     const text = interaction.options.getString("text");
 
+    const embed = createReviveEmbed(
+      text ?? "Wake up server!",
+      interaction.user
+    );
+
     if (canReviveServer()) {
       if (interaction.channel) {
         await interaction.channel.send({
-          content: `${roleMention(serverReviveRoleId)} ${
-            text ? text : "Wake up server!"
-          }`,
+          content: `${roleMention(serverReviveRoleId)}`,
+          embeds: [embed],
         });
         await interaction.reply({
           content: `Pinged successfully!, you can ping again at <t:${getWaitTime()}:t> :sloth:`,
+          ephemeral: true,
         });
       } else {
         await interaction.reply({
