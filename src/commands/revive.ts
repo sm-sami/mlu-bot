@@ -9,17 +9,23 @@ import { canReviveServer, getWaitTime } from "../programs/revive";
 export = {
   data: new SlashCommandBuilder()
     .setName("revive")
-    .setDescription("Revive the server!"),
+    .setDescription("Revive the server!")
+    .addStringOption((option) =>
+      option.setName("text").setDescription("Say something to the server!")
+    ),
 
   async handle(interaction: ChatInputCommandInteraction) {
+    const text = interaction.options.getString("text");
+
     if (canReviveServer()) {
       if (interaction.channel) {
         await interaction.channel.send({
-          content: roleMention(serverReviveRoleId),
+          content: `${roleMention(serverReviveRoleId)} ${
+            text ? text : "Wake up server!"
+          }`,
         });
         await interaction.reply({
           content: `Pinged successfully!, you can ping again at <t:${getWaitTime()}:t> :sloth:`,
-          ephemeral: true,
         });
       } else {
         await interaction.reply({
