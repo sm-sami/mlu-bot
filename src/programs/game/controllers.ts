@@ -5,14 +5,15 @@ import {
   mongoDocumentsToJSON,
 } from "../../utils";
 import { Game, GameState, Hint } from "./schema";
-import { Snowflake } from "discord.js";
+import { Snowflake, User } from "discord.js";
 
 export const createNewGame = async (
   answer: string,
   image: string,
   title: string,
   hints: Array<string>,
-  description: string
+  description: string,
+  host: User
 ): Promise<string | undefined> => {
   try {
     const db = await getDatabase();
@@ -25,6 +26,7 @@ export const createNewGame = async (
       image,
       title,
       hints: hintsObject,
+      host,
       isPosted: false,
       createdAt: new Date(),
     });
@@ -76,6 +78,22 @@ export const getHints = async (gameId: string): Promise<Hint[] | undefined> => {
     return hints;
   } catch (e) {
     console.log(e);
+  }
+};
+
+export const getGameHostId = async (gameId: string) => {
+  try {
+    const db = await getDatabase();
+    const { host } = JSON.parse(
+      JSON.stringify(
+        await db
+          .collection("games")
+          .findOne({ gameId }, { projection: { _id: 0, host: 1 } })
+      )
+    );
+    return host.id;
+  } catch (e) {
+    throw e;
   }
 };
 
