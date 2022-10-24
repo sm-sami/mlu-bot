@@ -14,6 +14,7 @@ import {
   cleanUpGames,
   getGameStates,
   getGameData,
+  getGameHostId,
 } from "./controllers";
 import { getGameIdFromEmbed } from "../../utils";
 import {
@@ -81,6 +82,7 @@ export const createGuessChannel = async (
 ) => {
   try {
     if (interaction.guild) {
+      const gameHostId = await getGameHostId(gameId);
       const channel = await interaction.guild.channels.create({
         name: `${interaction.user.username} guess`,
         type: ChannelType.GuildText,
@@ -103,6 +105,10 @@ export const createGuessChannel = async (
           },
           {
             id: interaction.user.id,
+            allow: [PermissionsBitField.Flags.ViewChannel],
+          },
+          {
+            id: gameHostId,
             allow: [PermissionsBitField.Flags.ViewChannel],
           },
         ],

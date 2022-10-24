@@ -36,6 +36,9 @@ export = {
         .addStringOption((option) =>
           option.setName("title").setDescription("Title of the game")
         )
+        .addUserOption((option) =>
+          option.setName("host").setDescription("The host of this game")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -61,6 +64,7 @@ export = {
       const description =
         interaction.options.getString("description") ||
         "Hallo\nYet Another Guess the Place";
+      const host = interaction.options.getUser("host") || interaction.user;
 
       try {
         const gameId = await createNewGame(
@@ -68,7 +72,8 @@ export = {
           image,
           title,
           hints,
-          description
+          description,
+          host
         );
         if (gameId) await sendPreviewEmbed(interaction, gameId);
       } catch (e) {

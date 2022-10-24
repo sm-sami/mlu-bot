@@ -1,4 +1,4 @@
-import { Snowflake } from "discord.js";
+import { Snowflake, User } from "discord.js";
 
 export interface Game {
   gameId: string;
@@ -7,6 +7,7 @@ export interface Game {
   answer: string;
   image: string;
   hints: Array<Hint>;
+  host: User;
   isPosted: Boolean;
   createdAt: Date;
   messageId: Snowflake;
