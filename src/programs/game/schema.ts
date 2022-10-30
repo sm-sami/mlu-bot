@@ -6,6 +6,7 @@ export interface Game {
   description: string;
   answer: string;
   image: string;
+  url: string;
   hints: Array<Hint>;
   host: User;
   isPosted: Boolean;

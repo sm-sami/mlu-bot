@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { serverReviveRoleId } from "../utils/constants";
 import { canReviveServer, getWaitTime } from "../programs/revive";
-import { createReviveEmbed } from "../utils/create/create-embed";
+import { createReviveEmbed } from "../utils/create";
 
 export = {
   data: new SlashCommandBuilder()

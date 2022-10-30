@@ -10,6 +10,7 @@ import { Snowflake, User } from "discord.js";
 export const createNewGame = async (
   answer: string,
   image: string,
+  url: string,
   title: string,
   hints: Array<string>,
   description: string,
@@ -24,6 +25,7 @@ export const createNewGame = async (
       description,
       answer,
       image,
+      url,
       title,
       hints: hintsObject,
       host,

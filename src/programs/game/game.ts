@@ -21,6 +21,7 @@ import {
   createConfirmButton,
   createCreateChannelButton,
   createGameEmbed,
+  createGameEndEmbed,
 } from "../../utils/create";
 import {
   chatGamesRole,
@@ -159,6 +160,14 @@ export const endGame = async (
     await interaction.channel.messages.edit(gameData.messageId, {
       components: [createChannelButtonDisabledRow],
     });
+
+    const gameEndEmbed = await createGameEndEmbed(gameId);
+    if (gameEndEmbed) {
+      await interaction.channel.send({
+        content: `${roleMention(chatGamesRole)}`,
+        embeds: [gameEndEmbed],
+      });
+    }
     await deleteChannels(interaction, gameData.gameId);
   }
 };
