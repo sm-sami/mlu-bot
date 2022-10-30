@@ -21,13 +21,13 @@ import {
   createConfirmButton,
   createCreateChannelButton,
   createGameEmbed,
+  createGameEndEmbed,
 } from "../../utils/create";
 import {
   chatGamesRole,
   chatGamesCategoryId,
   moderatorRoleId,
 } from "../../utils/constants";
-import { createGameEndEmbed } from "../../utils/create/create-embed";
 
 export const sendPreviewEmbed = async (
   interaction: ChatInputCommandInteraction,
