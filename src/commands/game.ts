@@ -31,6 +31,12 @@ export = {
           option.setName("hint2").setDescription("Hint #2").setRequired(true)
         )
         .addStringOption((option) =>
+          option
+            .setName("url")
+            .setDescription("Google earth URL")
+            .setRequired(true)
+        )
+        .addStringOption((option) =>
           option.setName("description").setDescription("Set the description")
         )
         .addStringOption((option) =>
@@ -54,13 +60,14 @@ export = {
 
   async handle(interaction: ChatInputCommandInteraction) {
     if (interaction.options.getSubcommand() === "create") {
-      const answer = interaction.options.getString("answer") || "Answer";
+      const answer = interaction.options.getString("answer") || "";
       const image = interaction.options.getString("image") || "";
       const title = interaction.options.getString("title") || "Guess the Place";
       const hints = [
         interaction.options.getString("hint1") || "",
         interaction.options.getString("hint2") || "",
       ];
+      const url = interaction.options.getString("url") || "";
       const description =
         interaction.options.getString("description") ||
         "Hallo\nYet Another Guess the Place";
@@ -70,6 +77,7 @@ export = {
         const gameId = await createNewGame(
           answer,
           image,
+          url,
           title,
           hints,
           description,

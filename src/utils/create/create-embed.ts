@@ -1,7 +1,7 @@
 import { EmbedBuilder, User, userMention } from "discord.js";
 import { getGameData } from "../../programs/game";
 import { getTopTenUsers, getUserData } from "../../programs/user";
-import { iconURL, gameInstructions } from "../constants";
+import { clientId, iconURL, gameInstructions } from "../constants";
 
 export const createUserStatsEmbed = async (user: User) => {
   try {
@@ -128,6 +128,42 @@ export const createGameEmbed = async (gameId: string, revealHint?: 0 | 1) => {
           {
             name: "Hints",
             value: hints,
+          }
+        )
+        .setImage(gameData.image)
+        .setTimestamp()
+        .setFooter({ text: `MLU | ${gameData.gameId}` });
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const createGameEndEmbed = async (gameId: string) => {
+  try {
+    const gameData = await getGameData(gameId);
+
+    if (gameData) {
+      return new EmbedBuilder()
+        .setColor(0xffffff)
+        .setTitle(gameData.title)
+        .setAuthor({
+          name: "Guess the Place",
+          iconURL,
+        })
+        .setDescription(
+          `The answer to the last Guess the Place was ||${gameData.answer}||\n\nCongrats! To Those who found the answer. Bye for now and will be back with another Guess the Place soooon! :sloth:`
+        )
+        .setFields(
+          {
+            name: ":information_source: Leaderboard",
+            value: `You can view the leaderboard using \`/leaderboard\` command from ${userMention(
+              clientId
+            )} You can also use \`/stats\` to view user stats.`,
+          },
+          {
+            name: ":eyes: Experience It!",
+            value: `Google Earth Web:\n[${gameData.title}](${gameData.url})`,
           }
         )
         .setImage(gameData.image)

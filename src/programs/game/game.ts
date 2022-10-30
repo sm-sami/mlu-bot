@@ -27,6 +27,7 @@ import {
   chatGamesCategoryId,
   moderatorRoleId,
 } from "../../utils/constants";
+import { createGameEndEmbed } from "../../utils/create/create-embed";
 
 export const sendPreviewEmbed = async (
   interaction: ChatInputCommandInteraction,
@@ -159,6 +160,14 @@ export const endGame = async (
     await interaction.channel.messages.edit(gameData.messageId, {
       components: [createChannelButtonDisabledRow],
     });
+
+    const gameEndEmbed = await createGameEndEmbed(gameId);
+    if (gameEndEmbed) {
+      await interaction.channel.send({
+        content: `${roleMention(chatGamesRole)}`,
+        embeds: [gameEndEmbed],
+      });
+    }
     await deleteChannels(interaction, gameData.gameId);
   }
 };
