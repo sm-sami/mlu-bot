@@ -1,7 +1,7 @@
 import { getCookieCount, giveCookie } from "../programs/cookie";
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { createCookieEmbed } from "../utils/create";
-import { CookieUser } from "../programs/cookie/schema";
+import { cookieUsers } from "../utils/constants";
 
 export = {
   data: new SlashCommandBuilder()
@@ -35,13 +35,18 @@ export = {
     if (subcommand === "give") {
       const user = interaction.options.getUser("user");
 
-      if (user) {
+      if (user && cookieUsers.includes(interaction.user.id)) {
         const cookieCount = (await giveCookie(user)) ?? 0;
 
         const cookieEmbed = createCookieEmbed(user, cookieCount);
         await interaction.reply({
           content: `Gave 1 cookie to ${user.username}`,
           embeds: [cookieEmbed],
+        });
+      } else if (!cookieUsers.includes(interaction.user.id)) {
+        await interaction.reply({
+          content: "You are not authorized to do this",
+          ephemeral: true,
         });
       }
     } else if (subcommand === "count") {
