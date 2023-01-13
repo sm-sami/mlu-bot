@@ -187,3 +187,16 @@ export const createReviveEmbed = (text: string, user: User) => {
     .setTimestamp()
     .setFooter({ text: "MLU | Server Revive" });
 };
+
+export const createCookieEmbed = (user: User, cookies: number) => {
+  return new EmbedBuilder()
+    .setColor(0x000000)
+    .setTitle(`Cookies! for ${user.username}`)
+    .setDescription(
+      cookies
+        ? `\`${cookies}\` x :cookie:`
+        : "Unfortunately, you have 0 cookies :smile:"
+    )
+    .setTimestamp()
+    .setFooter({ text: "MLU | Cookie" });
+};
