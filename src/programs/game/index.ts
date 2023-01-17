@@ -37,8 +37,8 @@ export const sendPreviewEmbed = async (
 ) => {
   try {
     const gameData = await getGameData(gameId);
-    const gameEmbed = await createGameEmbed(gameData);
-    const confirmButtonRow = await createConfirmButton();
+    const gameEmbed = createGameEmbed(gameData);
+    const confirmButtonRow = createConfirmButton();
 
     if (gameEmbed && confirmButtonRow) {
       await interaction.reply({
@@ -49,7 +49,7 @@ export const sendPreviewEmbed = async (
       });
       await wait(1000 * 60 * 10);
       await cleanUpGames();
-      const confirmButtonDisabledRow = await createConfirmButton(true);
+      const confirmButtonDisabledRow = createConfirmButton(true);
       await interaction.editReply({
         components: [confirmButtonDisabledRow],
       });
@@ -65,14 +65,14 @@ export const postGame = async (interaction: ButtonInteraction) => {
   if (interaction.channel && interaction.message) {
     const gameId = getGameIdFromEmbed(interaction.message);
     const gameData = await getGameData(gameId);
-    const gameEmbed = await createGameEmbed(gameData);
+    const gameEmbed = createGameEmbed(gameData);
     const createChannelButtonRow = await createCreateChannelButton();
     const message = await interaction.channel.send({
       content: `${roleMention(chatGamesRole)}`,
       embeds: [gameEmbed!],
       components: [createChannelButtonRow],
     });
-    const confirmButtonDisabledRow = await createConfirmButton(true);
+    const confirmButtonDisabledRow = createConfirmButton(true);
     await interaction.editReply({ components: [confirmButtonDisabledRow] });
     await interaction.followUp({
       content: "New Guess the Place posted successfully!  :smile:",
@@ -90,14 +90,14 @@ export const updateGameState = async (message: Message) => {
   const hints = await getHints(gameId);
   await wait(1000 * 60 * 60 * 24);
   const gameData = await getGameData(gameId);
-  let gameEmbed = await createGameEmbed(gameData, 0);
+  let gameEmbed = createGameEmbed(gameData, 0);
   if (hints)
     await thread.send({
       content: `[${roleMention(chatGamesRole)}] hint #1: ${hints[0].hint}`,
     });
   await message.edit({ embeds: [gameEmbed!] });
   await wait(1000 * 60 * 60 * 24 * 2);
-  gameEmbed = await createGameEmbed(gameData, 1);
+  gameEmbed = createGameEmbed(gameData, 1);
   if (hints)
     await thread.send({
       content: `[${roleMention(chatGamesRole)}] hint #2: ${hints[1].hint}`,
@@ -196,14 +196,12 @@ export const endGame = async (
       content: `Ending game with ID \`${gameData.gameId}\``,
       ephemeral: true,
     });
-    const createChannelButtonDisabledRow = await createCreateChannelButton(
-      true
-    );
+    const createChannelButtonDisabledRow = createCreateChannelButton(true);
     await interaction.channel.messages.edit(gameData.messageId, {
       components: [createChannelButtonDisabledRow],
     });
 
-    const gameEndEmbed = await createGameEndEmbed(gameData);
+    const gameEndEmbed = createGameEndEmbed(gameData);
     if (gameEndEmbed) {
       await interaction.channel.send({
         content: `${roleMention(chatGamesRole)}`,
