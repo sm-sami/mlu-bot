@@ -1,4 +1,4 @@
-import { getCookieCount, giveCookie } from "./index";
+import { getCookieCount, giveCookie } from "./controllers";
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { createCookieEmbed } from "../../utils/create";
 import { cookieUsers } from "../../utils/constants";

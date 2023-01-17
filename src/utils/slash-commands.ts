@@ -21,21 +21,21 @@ export const loadCommands = () => {
   const programsPath = path.join(__dirname, "../programs");
   const programs = fs.readdirSync(programsPath);
 
-  const commandFiles = programs
+  const files = programs
     .filter((file) => file.endsWith("command.js"))
     .map((file) => path.join(programsPath, file));
-  const otherPrograms = programs.filter((file) => !file.endsWith("command.js"));
 
+  const otherPrograms = programs.filter((file) => !file.endsWith(".js"));
   for (const program of otherPrograms) {
     const commandPath = path.join(programsPath, program);
     const directoryFiles = fs.readdirSync(commandPath);
     const command = directoryFiles
       .filter((file) => file.endsWith("command.js"))
       .map((file) => path.join(commandPath, file));
-    commandFiles.push(...command);
+    files.push(...command);
   }
 
-  for (const file of commandFiles) {
+  for (const file of files) {
     const command = require(file);
     bot_commands.set(command.data.name, command);
     commands.push(command.data.toJSON());
