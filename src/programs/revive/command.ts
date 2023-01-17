@@ -3,9 +3,11 @@ import {
   ChatInputCommandInteraction,
   roleMention,
 } from "discord.js";
-import { serverReviveRoleId } from "../../utils/constants";
-import { canReviveServer, getWaitTime } from "./index";
+
+import { canReviveServer, getWaitTime } from "./";
+import { sendChatApplicationCommandErrorEmbed } from "../../utils";
 import { createReviveEmbed } from "../../utils/create";
+import { serverReviveRoleId } from "../../utils/constants";
 
 export = {
   data: new SlashCommandBuilder()
@@ -34,10 +36,10 @@ export = {
           ephemeral: true,
         });
       } else {
-        await interaction.reply({
-          content: "Something went wrong :(",
-          ephemeral: true,
-        });
+        await sendChatApplicationCommandErrorEmbed(
+          interaction,
+          "Channel cannot be found!"
+        );
       }
       return;
     }

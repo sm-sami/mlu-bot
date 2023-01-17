@@ -1,6 +1,8 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
-import { createUserStatsEmbed } from "../../utils/create";
+
 import { getUserData } from "./controllers";
+import { createUserStatsEmbed } from "../../utils/create";
+import { sendChatApplicationCommandErrorEmbed } from "../../utils";
 
 export = {
   data: new SlashCommandBuilder()
@@ -15,15 +17,12 @@ export = {
   async handle(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser("user") || interaction.user;
 
-    try {
-      if (user) {
-        const userData = await getUserData(user);
-        const playerStats = await createUserStatsEmbed(user, userData);
-
-        playerStats && (await interaction.reply({ embeds: [playerStats] }));
-      }
-    } catch (e) {
-      console.log(e);
+    if (user) {
+      const userData = await getUserData(user);
+      const playerStats = await createUserStatsEmbed(user, userData);
+      playerStats && (await interaction.reply({ embeds: [playerStats] }));
+    } else {
+      await sendChatApplicationCommandErrorEmbed(interaction);
     }
   },
 };

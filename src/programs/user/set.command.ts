@@ -3,7 +3,9 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
 } from "discord.js";
+
 import { updateUserPoints } from "./controllers";
+import { sendChatApplicationCommandErrorEmbed } from "../../utils";
 
 export = {
   data: new SlashCommandBuilder()
@@ -27,18 +29,16 @@ export = {
     const user = interaction.options.getUser("user");
     const points = interaction.options.getNumber("points");
 
-    try {
-      if (user && points) {
-        const isUpdated = await updateUserPoints(user, points);
+    if (user && points) {
+      const isUpdated = await updateUserPoints(user, points);
 
-        await interaction.reply(
-          isUpdated
-            ? `Awarded **${points}** points to ${user}`
-            : "Error: Failed to update the points"
-        );
-      }
-    } catch (e) {
-      console.log(e);
+      await interaction.reply(
+        isUpdated
+          ? `Awarded **${points}** points to ${user}`
+          : "Error: Failed to update the points"
+      );
+    } else {
+      await sendChatApplicationCommandErrorEmbed(interaction);
     }
   },
 };

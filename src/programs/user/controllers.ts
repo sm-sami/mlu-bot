@@ -1,9 +1,13 @@
 import { User } from "discord.js";
-import { getDatabase } from "../../utils/database";
+
 import { GameUser } from "./schema";
+import { getDatabase } from "../../utils/database";
 import { mongoDocumentsToJSON } from "../../utils";
 
-export const updateUserPoints = async (user: User, points: number) => {
+export const updateUserPoints = async (
+  user: User,
+  points: number
+): Promise<number> => {
   try {
     const db = await getDatabase();
     const { modifiedCount, upsertedCount } = await db
@@ -16,6 +20,7 @@ export const updateUserPoints = async (user: User, points: number) => {
     return modifiedCount || upsertedCount;
   } catch (e) {
     console.error(e);
+    return 0;
   }
 };
 

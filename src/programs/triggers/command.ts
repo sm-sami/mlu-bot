@@ -3,7 +3,9 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
 } from "discord.js";
+
 import { addChatTrigger, deleteChatTrigger } from "./controllers";
+import { sendChatApplicationCommandErrorEmbed } from "../../utils";
 
 export = {
   data: new SlashCommandBuilder()
@@ -44,35 +46,31 @@ export = {
       const response = interaction.options.getString("response");
       const trigger = interaction.options.getString("trigger");
 
-      try {
-        if (response && trigger) {
-          const isTriggerAdded = await addChatTrigger(trigger, response);
-          if (isTriggerAdded) {
-            await interaction.reply("Trigger added successfully :smile:");
-            return;
-          }
+      if (response && trigger) {
+        const isTriggerAdded = await addChatTrigger(trigger, response);
+        if (isTriggerAdded) {
+          await interaction.reply("Trigger added successfully :smile:");
+          return;
         }
-        await interaction.reply(
-          "Something went wrong, or the trigger already exists! :sloth:"
-        );
-      } catch (e) {
-        console.error(e);
       }
+      await sendChatApplicationCommandErrorEmbed(
+        interaction,
+        "the trigger might already exist!, try again :sloth:",
+        false
+      );
     } else if (interaction.options.getSubcommand() === "delete") {
       const triggerId = interaction.options.getString("id");
 
-      try {
-        if (triggerId) {
-          const isDeleted = await deleteChatTrigger(triggerId);
-          if (isDeleted)
-            await interaction.reply("Trigger deleted successfully! :smile:");
-          else
-            await interaction.reply(
-              "Something went wrong, is the triggerId a valid one? :pensive:"
-            );
-        }
-      } catch (e) {
-        console.log(e);
+      if (triggerId) {
+        const isDeleted = await deleteChatTrigger(triggerId);
+        if (isDeleted)
+          await interaction.reply("Trigger deleted successfully! :smile:");
+        else
+          await sendChatApplicationCommandErrorEmbed(
+            interaction,
+            "is the triggerId a valid one?",
+            false
+          );
       }
     }
   },
