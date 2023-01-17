@@ -1,9 +1,6 @@
 import { v4 as getId } from "uuid";
 import { getDatabase } from "../../utils/database";
-import {
-  mapHintsWithReleaseTimestamp,
-  mongoDocumentsToJSON,
-} from "../../utils";
+import { mapHintsWithReleaseTimestamp } from "../../utils";
 import { Game, GameState, Hint } from "./schema";
 import { Snowflake, User } from "discord.js";
 
@@ -67,7 +64,7 @@ export const setPosted = async (
   }
 };
 
-export const getHints = async (gameId: string): Promise<Hint[] | undefined> => {
+export const getHints = async (gameId: string): Promise<Hint[]> => {
   try {
     const db = await getDatabase();
     const { hints } = JSON.parse(
@@ -80,6 +77,7 @@ export const getHints = async (gameId: string): Promise<Hint[] | undefined> => {
     return hints;
   } catch (e) {
     console.log(e);
+    return [];
   }
 };
 
@@ -124,7 +122,7 @@ export const saveGameState = async (
 export const doesPlayerHaveChannel = async (
   userId: Snowflake,
   gameId: string
-): Promise<GameState | undefined> => {
+): Promise<GameState | null> => {
   try {
     const db = await getDatabase();
     return JSON.parse(
@@ -136,17 +134,20 @@ export const doesPlayerHaveChannel = async (
     );
   } catch (e) {
     console.log(e);
+    return null;
   }
 };
 
 export const getGameStates = async (gameId: string) => {
   try {
     const db = await getDatabase();
-    return mongoDocumentsToJSON(
-      await db
-        .collection("game_state")
-        .find({ gameId }, { projection: { _id: 0 } })
-        .toArray()
+    return JSON.parse(
+      JSON.stringify(
+        await db
+          .collection("game_state")
+          .find({ gameId }, { projection: { _id: 0 } })
+          .toArray()
+      )
     );
   } catch (e) {
     console.log(e);

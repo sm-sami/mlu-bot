@@ -2,6 +2,7 @@ import { EmbedBuilder, User, userMention } from "discord.js";
 import { GameUser } from "../../programs/user/schema";
 import { Game } from "../../programs/game/schema";
 import { clientId, iconURL, gameInstructions } from "../constants";
+import test from "node:test";
 
 export const createUserStatsEmbed = (user: User, userData?: GameUser) => {
   if (userData) {
@@ -88,70 +89,66 @@ export const createLeaderboardEmbed = async (topTenUsers: GameUser[]) => {
   }
 };
 
-export const createGameEmbed = (gameData?: Game, revealHint?: 0 | 1) => {
-  if (gameData) {
-    let hints = `hint #1: ${gameData.hints[0].timestamp}\nhint #2: ${gameData.hints[1].timestamp}`;
-    switch (revealHint) {
-      case 0:
-        hints = `hint #1: ${gameData.hints[0].hint}\nhint #2: ${gameData.hints[1].timestamp}`;
-        break;
-      case 1:
-        hints = `hint #1: ${gameData.hints[0].hint}\nhint #2: ${gameData.hints[1].hint}`;
-        break;
-    }
-
-    return new EmbedBuilder()
-      .setColor(0xffffff)
-      .setTitle(gameData.title)
-      .setAuthor({
-        name: "Guess the Place",
-        iconURL,
-      })
-      .setDescription(gameData.description)
-      .setFields(
-        {
-          name: "Instructions",
-          value: `${gameInstructions.map((i) => `• ${i}`).join("\n")}`,
-        },
-        {
-          name: "Hints",
-          value: hints,
-        }
-      )
-      .setImage(gameData.image)
-      .setTimestamp()
-      .setFooter({ text: `MLU | ${gameData.gameId}` });
+export const createGameEmbed = (gameData: Game, revealHint?: 0 | 1) => {
+  let hints = `hint #1: ${gameData.hints[0].timestamp}\nhint #2: ${gameData.hints[1].timestamp}`;
+  switch (revealHint) {
+    case 0:
+      hints = `hint #1: ${gameData.hints[0].hint}\nhint #2: ${gameData.hints[1].timestamp}`;
+      break;
+    case 1:
+      hints = `hint #1: ${gameData.hints[0].hint}\nhint #2: ${gameData.hints[1].hint}`;
+      break;
   }
+
+  return new EmbedBuilder()
+    .setColor(0xffffff)
+    .setTitle(gameData.title)
+    .setAuthor({
+      name: "Guess the Place",
+      iconURL,
+    })
+    .setDescription(gameData.description)
+    .setFields(
+      {
+        name: "Instructions",
+        value: `${gameInstructions.map((i) => `• ${i}`).join("\n")}`,
+      },
+      {
+        name: "Hints",
+        value: hints,
+      }
+    )
+    .setImage(gameData.image)
+    .setTimestamp()
+    .setFooter({ text: `MLU | ${gameData.gameId}` });
 };
 
-export const createGameEndEmbed = (gameData?: Game) => {
-  if (gameData) {
-    return new EmbedBuilder()
-      .setColor(0xffffff)
-      .setTitle(gameData.title)
-      .setAuthor({
-        name: "Guess the Place",
-        iconURL,
-      })
-      .setDescription(
-        `The answer to the last Guess the Place was ||${gameData.answer}||\n\nCongrats! To Those who found the answer. Bye for now and will be back with another Guess the Place soooon! :sloth:`
-      )
-      .setFields(
-        {
-          name: ":information_source: Leaderboard",
-          value: `You can view the leaderboard using \`/leaderboard\` command from ${userMention(
-            clientId
-          )} You can also use \`/stats\` to view user stats.`,
-        },
-        {
-          name: ":eyes: Experience It!",
-          value: `Google Earth Web:\n[${gameData.title}](${gameData.url})`,
-        }
-      )
-      .setImage(gameData.image)
-      .setTimestamp()
-      .setFooter({ text: `MLU | ${gameData.gameId}` });
-  }
+export const createGameEndEmbed = (gameData: Game) => {
+  return new EmbedBuilder()
+    .setColor(0xffffff)
+    .setTitle(gameData.title)
+    .setAuthor({
+      name: "Guess the Place",
+      iconURL,
+    })
+    .setDescription(
+      `The answer to the last Guess the Place was ||${gameData.answer}||\n\nCongrats! To Those who found the answer. Bye for now and will be back with another Guess the Place soooon! :sloth:`
+    )
+    .setFields(
+      {
+        name: ":information_source: Leaderboard",
+        value: `You can view the leaderboard using \`/leaderboard\` command from ${userMention(
+          clientId
+        )} You can also use \`/stats\` to view user stats.`,
+      },
+      {
+        name: ":eyes: Experience It!",
+        value: `Google Earth Web:\n[${gameData.title}](${gameData.url})`,
+      }
+    )
+    .setImage(gameData.image)
+    .setTimestamp()
+    .setFooter({ text: `MLU | ${gameData.gameId}` });
 };
 
 export const createReviveEmbed = (text: string, user: User) => {
@@ -178,4 +175,13 @@ export const createCookieEmbed = (user: User, cookies: number) => {
     )
     .setTimestamp()
     .setFooter({ text: "MLU | Cookie" });
+};
+
+export const createErrorEmbed = (err?: string) => {
+  return new EmbedBuilder()
+    .setColor(0xff0000)
+    .setTitle("Error")
+    .setDescription(`Something went wrong :( ${err ?? `: ${err}`}`)
+    .setTimestamp()
+    .setFooter({ text: "MLU | Error" });
 };

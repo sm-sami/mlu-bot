@@ -37,6 +37,8 @@ export const sendPreviewEmbed = async (
 ) => {
   try {
     const gameData = await getGameData(gameId);
+    if (!gameData) return;
+
     const gameEmbed = createGameEmbed(gameData);
     const confirmButtonRow = createConfirmButton();
 
@@ -65,6 +67,8 @@ export const postGame = async (interaction: ButtonInteraction) => {
   if (interaction.channel && interaction.message) {
     const gameId = getGameIdFromEmbed(interaction.message);
     const gameData = await getGameData(gameId);
+    if (!gameData) return;
+
     const gameEmbed = createGameEmbed(gameData);
     const createChannelButtonRow = await createCreateChannelButton();
     const message = await interaction.channel.send({
@@ -90,6 +94,8 @@ export const updateGameState = async (message: Message) => {
   const hints = await getHints(gameId);
   await wait(1000 * 60 * 60 * 24);
   const gameData = await getGameData(gameId);
+  if (!gameData) return;
+
   let gameEmbed = createGameEmbed(gameData, 0);
   if (hints)
     await thread.send({
