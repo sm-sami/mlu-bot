@@ -4,7 +4,7 @@ import {
   Interaction,
   InteractionType,
 } from "discord.js";
-import { bot_commands as commands } from "../utils/slash-commands";
+import { commands } from "../utils/slash-commands";
 import { createGuessChannel, postGame } from "../programs/game";
 
 export const handleInteractionCreate = async (interaction: Interaction) => {
