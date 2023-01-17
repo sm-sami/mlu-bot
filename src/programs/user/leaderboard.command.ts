@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
 import { createLeaderboardEmbed } from "../../utils/create";
+import { getTopTenUsers } from "./controllers";
 
 export = {
   data: new SlashCommandBuilder()
@@ -7,7 +8,8 @@ export = {
     .setDescription("Get the leaderboard"),
 
   async handle(interaction: ChatInputCommandInteraction) {
-    const leaderboardStats = await createLeaderboardEmbed();
+    const topTenUsers = await getTopTenUsers();
+    const leaderboardStats = await createLeaderboardEmbed(topTenUsers);
     leaderboardStats &&
       (await interaction.reply({ embeds: [leaderboardStats] }));
   },
