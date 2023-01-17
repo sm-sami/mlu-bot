@@ -7,7 +7,7 @@ let db: Db;
 export const initializeClient = async (): Promise<MongoClient> => {
   try {
     const dbClient = await MongoClient.connect(dbUri);
-    console.log(`✔️Connected to Database`);
+    console.log("✅  Connected to Database");
     return dbClient;
   } catch (e) {
     throw e;

@@ -1,13 +1,12 @@
 import { EmbedBuilder, User, userMention } from "discord.js";
-import { getGameData } from "../../programs/game";
-import { getTopTenUsers, getUserData } from "../../programs/user";
+import { GameUser } from "../../programs/user/schema";
+import { Game } from "../../programs/game/schema";
 import { clientId, iconURL, gameInstructions } from "../constants";
 
-export const createUserStatsEmbed = async (user: User) => {
+export const createUserStatsEmbed = async (user: User, userData?: GameUser) => {
   try {
-    const userData = await getUserData(user);
-
     if (userData) {
+      const { user, points, numberOfWins, userId } = userData;
       return new EmbedBuilder()
         .setColor(user.accentColor || 0x0099ff)
         .setTitle("Player Stats")
@@ -18,14 +17,12 @@ export const createUserStatsEmbed = async (user: User) => {
           name: "Guess the Place",
           iconURL,
         })
-        .setDescription(
-          `Guess the Place stats for ${userMention(userData.userId)}`
-        )
+        .setDescription(`Guess the Place stats for ${userMention(userId)}`)
         .addFields(
-          { name: "Total Points", value: `${userData.points}`, inline: true },
+          { name: "Total Points", value: `${points}`, inline: true },
           {
             name: "Number of wins",
-            value: `${userData.numberOfWins}`,
+            value: `${numberOfWins}`,
             inline: true,
           }
         )
@@ -43,7 +40,7 @@ export const createUserStatsEmbed = async (user: User) => {
           iconURL:
             "https://cdn.discordapp.com/attachments/871801727974785055/937070492366561352/outline_place_white_24dp.png",
         })
-        .setDescription(`Guess the Place stats for <@${user.id}>`)
+        .setDescription(`Guess the Place stats for ${userMention(user.id)}`)
         .addFields({
           name: "No stats found :(",
           value: `No stats found for this user`,
@@ -56,10 +53,8 @@ export const createUserStatsEmbed = async (user: User) => {
   }
 };
 
-export const createLeaderboardEmbed = async () => {
+export const createLeaderboardEmbed = async (topTenUsers: GameUser[]) => {
   try {
-    const topTenUsers = await getTopTenUsers();
-
     const fields = [
       {
         name: "User",
@@ -97,10 +92,8 @@ export const createLeaderboardEmbed = async () => {
   }
 };
 
-export const createGameEmbed = async (gameId: string, revealHint?: 0 | 1) => {
+export const createGameEmbed = async (gameData?: Game, revealHint?: 0 | 1) => {
   try {
-    const gameData = await getGameData(gameId);
-
     if (gameData) {
       let hints = `hint #1: ${gameData.hints[0].timestamp}\nhint #2: ${gameData.hints[1].timestamp}`;
       switch (revealHint) {
@@ -139,10 +132,8 @@ export const createGameEmbed = async (gameId: string, revealHint?: 0 | 1) => {
   }
 };
 
-export const createGameEndEmbed = async (gameId: string) => {
+export const createGameEndEmbed = async (gameData?: Game) => {
   try {
-    const gameData = await getGameData(gameId);
-
     if (gameData) {
       return new EmbedBuilder()
         .setColor(0xffffff)

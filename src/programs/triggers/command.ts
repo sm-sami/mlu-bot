@@ -3,7 +3,7 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
 } from "discord.js";
-import { addChatTrigger, deleteChatTrigger } from "../programs/triggers";
+import { addChatTrigger, deleteChatTrigger } from "./controllers";
 
 export = {
   data: new SlashCommandBuilder()

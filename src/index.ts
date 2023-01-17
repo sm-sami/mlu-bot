@@ -1,18 +1,16 @@
 import {
   Client,
-  Interaction,
-  Message,
+  Events,
   GatewayIntentBits,
+  InteractionType,
   ChannelType,
 } from "discord.js";
 import {
-  handleInputCommandInteraction,
-  handleButtonInteraction,
-  handleGuildTextMessage,
-} from "./handlers";
-import { deployCommands } from "./utils/deploy-commands";
+  handleInteractionCreate,
+  handleMessageCreate,
+  onReady,
+} from "./events";
 import { token } from "./utils/constants";
-import { loadChatTriggers } from "./programs/triggers";
 
 const bot = new Client({
   intents: [
@@ -22,27 +20,8 @@ const bot = new Client({
   ],
 });
 
-bot.once("ready", () => console.log("✔️Bot Ready!"));
+bot.once(Events.ClientReady, onReady);
+bot.on(Events.InteractionCreate, handleInteractionCreate);
+bot.on(Events.MessageCreate, handleMessageCreate);
 
-bot.on("interactionCreate", async (interaction: Interaction) => {
-  if (interaction.isChatInputCommand())
-    await handleInputCommandInteraction(interaction);
-  if (interaction.isButton()) await handleButtonInteraction(interaction);
-});
-
-bot.on("messageCreate", async (message: Message) => {
-  if (message.author.bot) return;
-
-  switch (message.channel.type) {
-    case ChannelType.GuildText:
-      await handleGuildTextMessage(message);
-      break;
-  }
-});
-
-bot
-  .login(token)
-  .then(() => bot.user!.setActivity("/stats"))
-  .then(() => deployCommands())
-  .then(() => loadChatTriggers())
-  .catch(() => console.error);
+bot.login(token).catch(() => console.error);

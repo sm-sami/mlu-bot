@@ -3,9 +3,9 @@ import {
   ChatInputCommandInteraction,
   roleMention,
 } from "discord.js";
-import { serverReviveRoleId } from "../utils/constants";
-import { canReviveServer, getWaitTime } from "../programs/revive";
-import { createReviveEmbed } from "../utils/create";
+import { serverReviveRoleId } from "../../utils/constants";
+import { canReviveServer, getWaitTime } from "./index";
+import { createReviveEmbed } from "../../utils/create";
 
 export = {
   data: new SlashCommandBuilder()
