@@ -1,8 +1,7 @@
 import { getDatabase } from "../../utils/database";
 import { Snowflake, User } from "discord.js";
-import { CookieUser } from "./schema";
 
-export const giveCookie = async (user: User) => {
+export const giveCookie = async (user: User): Promise<number> => {
   try {
     const db = await getDatabase();
 
@@ -21,7 +20,7 @@ export const giveCookie = async (user: User) => {
   }
 };
 
-export const getCookieCount = async (userId: Snowflake) => {
+export const getCookieCount = async (userId: Snowflake): Promise<number> => {
   try {
     const db = await getDatabase();
 

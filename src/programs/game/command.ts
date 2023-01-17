@@ -4,7 +4,8 @@ import {
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
-import { createNewGame, endGame, sendPreviewEmbed } from "../programs/game";
+import { createNewGame } from "./controllers";
+import { endGame, sendPreviewEmbed } from "./index";
 
 export = {
   data: new SlashCommandBuilder()
