@@ -8,7 +8,7 @@ let lastUpdated: number;
 export const loadChatTriggers = async () => {
   if (!lastUpdated || Date.now() - lastUpdated > 1000 * 60 * 30) {
     triggers = (await getChatTriggers()) || [];
-    console.log("✔️Loaded Chat Triggers");
+    console.log("✅  Loaded Chat Triggers");
     lastUpdated = Date.now();
   }
   return triggers;

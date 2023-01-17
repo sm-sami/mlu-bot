@@ -1,8 +1,5 @@
 import { Client } from "discord.js";
-import {
-  loadCommands,
-  deployCommands,
-} from "../utils/slash-commands";
+import { loadCommands, deployCommands } from "../utils/slash-commands";
 import { loadChatTriggers } from "../programs/triggers";
 
 export const onReady = async (bot: Client) => {

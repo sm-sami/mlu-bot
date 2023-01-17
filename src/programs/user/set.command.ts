@@ -3,7 +3,7 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
 } from "discord.js";
-import { updateUserPoints } from "../programs/user";
+import { updateUserPoints } from "./index";
 
 export = {
   data: new SlashCommandBuilder()

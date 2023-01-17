@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
-import { createUserStatsEmbed } from "../utils/create";
+import { createUserStatsEmbed } from "../../utils/create";
 
 export = {
   data: new SlashCommandBuilder()

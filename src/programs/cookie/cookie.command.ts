@@ -1,7 +1,7 @@
-import { getCookieCount, giveCookie } from "../programs/cookie";
+import { getCookieCount, giveCookie } from "./index";
 import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
-import { createCookieEmbed } from "../utils/create";
-import { cookieUsers } from "../utils/constants";
+import { createCookieEmbed } from "../../utils/create";
+import { cookieUsers } from "../../utils/constants";
 
 export = {
   data: new SlashCommandBuilder()
