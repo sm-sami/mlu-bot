@@ -1,10 +1,23 @@
-import { Message, time } from "discord.js";
+import { ChatInputCommandInteraction, Message, time } from "discord.js";
+import { createErrorEmbed } from "./create";
 import { Document } from "mongodb";
 import { Hint } from "../programs/game/schema";
 
 export const getGameIdFromEmbed = (message: Message): string => {
   if (!message.embeds[0].footer) return "";
   return message.embeds[0].footer.text.replace("MLU | ", "");
+};
+
+export const sendChatApplicationCommandErrorEmbed = async (
+  interaction: ChatInputCommandInteraction,
+  err?: string,
+  ephemeral?: boolean
+) => {
+  const errorEmbed = createErrorEmbed(err);
+  await interaction.reply({
+    embeds: [errorEmbed],
+    ephemeral: ephemeral ?? true,
+  });
 };
 
 export const mapHintsWithReleaseTimestamp = (
@@ -21,5 +34,5 @@ export const mapHintsWithReleaseTimestamp = (
   ];
 };
 
-export const mongoDocumentsToJSON = (documents: Document | Array<Document>) =>
+export const mongoDocumentsToJSON = (documents: Array<Document>) =>
   JSON.parse(JSON.stringify(documents));

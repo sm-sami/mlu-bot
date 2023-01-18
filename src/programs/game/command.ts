@@ -4,8 +4,10 @@ import {
   PermissionFlagsBits,
   ButtonStyle,
 } from "discord.js";
+
+import { endGame, sendPreviewEmbed } from "./";
 import { createNewGame } from "./controllers";
-import { endGame, sendPreviewEmbed } from "./index";
+import { sendChatApplicationCommandErrorEmbed } from "../../utils";
 
 export = {
   data: new SlashCommandBuilder()
@@ -74,20 +76,23 @@ export = {
         "Hallo\nYet Another Guess the Place";
       const host = interaction.options.getUser("host") || interaction.user;
 
-      try {
-        const gameId = await createNewGame(
-          answer,
-          image,
-          url,
-          title,
-          hints,
-          description,
-          host
+      const gameId = await createNewGame(
+        answer,
+        image,
+        url,
+        title,
+        hints,
+        description,
+        host
+      );
+      if (!gameId) {
+        await sendChatApplicationCommandErrorEmbed(
+          interaction,
+          "Error creating game"
         );
-        if (gameId) await sendPreviewEmbed(interaction, gameId);
-      } catch (e) {
-        console.error(e);
+        return;
       }
+      await sendPreviewEmbed(interaction, gameId);
     } else if (interaction.options.getSubcommand() === "end") {
       const gameId = interaction.options.getString("id") || "";
       await endGame(interaction, gameId);

@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 
-export const createConfirmButton = async (isDisabled?: boolean) => {
+export const createConfirmButton = (isDisabled?: boolean) => {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId("confirm-post")
@@ -11,7 +11,7 @@ export const createConfirmButton = async (isDisabled?: boolean) => {
   );
 };
 
-export const createCreateChannelButton = async (isDisabled?: boolean) => {
+export const createCreateChannelButton = (isDisabled?: boolean) => {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId("create-channel")

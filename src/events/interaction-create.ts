@@ -23,9 +23,7 @@ const handleInputCommandInteraction = async (
 };
 
 const handleButtonInteraction = async (interaction: ButtonInteraction) => {
-  const buttonId = interaction.customId;
-
-  switch (buttonId) {
+  switch (interaction.customId) {
     case "confirm-post":
       await postGame(interaction);
       break;
