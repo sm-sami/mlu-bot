@@ -10,7 +10,7 @@ import { REST } from "@discordjs/rest";
 import { clientId, guildId, token } from "./constants";
 
 const commands: Array<JSON> = [];
-const bot_commands = new Collection<string, Command>();
+const botCommands = new Collection<string, Command>();
 
 interface Command {
   data: SlashCommandBuilder;
@@ -37,7 +37,7 @@ export const loadCommands = () => {
 
   for (const file of files) {
     const command = require(file);
-    bot_commands.set(command.data.name, command);
+    botCommands.set(command.data.name, command);
     commands.push(command.data.toJSON());
   }
 };
@@ -54,4 +54,4 @@ export const deployCommands = async () => {
   }
 };
 
-export { bot_commands as commands };
+export { botCommands as commands };
