@@ -30,7 +30,7 @@ export const addChatTrigger = async (trigger: string, response: string) => {
         .collection("triggers")
         .updateOne(
           { response },
-          { $push: { triggers: { triggerId: getId(), trigger } } },
+          { push: { triggers: { triggerId: getId(), trigger } } },
           { upsert: true }
         );
       return modifiedCount || upsertedCount;
@@ -47,7 +47,7 @@ export const deleteChatTrigger = async (triggerId: string) => {
       .collection("triggers")
       .updateOne(
         { triggers: { $elemMatch: { triggerId } } },
-        { $pull: { triggers: { triggerId } } }
+        { pull: { triggers: { triggerId } } }
       );
     return modifiedCount;
   } catch (e) {
